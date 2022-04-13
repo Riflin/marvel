@@ -101,4 +101,10 @@
     <string name="sort_by">Ordenar por:</string>
     <string name="error">Error</string>
     <string name="aceptar">Aceptar</string>
+    <string name="seleccione_filtro_nombre">Escriba el nombre por el que quiere que comiencen los personajes (ejemplo: Spider-Man)</string>
+    <string name="error_instanciando_dialogo">Error instanciando el diálogo</string>
+    <string name="personajes_marvel">Personajes Marvel</string>
+    <string name="ocultar_filtros">Ocultar filtros</string>
+    <string name="progreso">Progreso</string>
+    <string name="thumbnail">Thumbnail</string>
 </resources>

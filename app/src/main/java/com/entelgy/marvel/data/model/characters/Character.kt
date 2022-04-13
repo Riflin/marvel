@@ -3,6 +3,8 @@ package com.entelgy.marvel.data.model.characters
 import android.os.Parcel
 import android.os.Parcelable
 import com.entelgy.marvel.data.model.*
+import com.entelgy.marvel.data.model.imageformats.ImageFormat
+import com.entelgy.marvel.data.model.imageformats.PortraitImage
 import com.google.gson.annotations.SerializedName
 import java.util.*
 import kotlin.collections.ArrayList
@@ -44,7 +46,10 @@ data class Character(
         parcel.readParcelable(StoryList::class.java.classLoader),
         parcel.readParcelable(EventList::class.java.classLoader),
         parcel.readParcelable(SeriesList::class.java.classLoader)
-    ) {
+    )
+
+    fun getThumbnailPath(imageFormat: ImageFormat): String {
+        return thumbnail?.path + "/" + PortraitImage.Xlarge.format() + "." + thumbnail?.extension
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

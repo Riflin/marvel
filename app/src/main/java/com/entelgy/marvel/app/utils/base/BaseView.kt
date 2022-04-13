@@ -7,9 +7,9 @@ import androidx.fragment.app.FragmentManager
 interface BaseView {
     fun showLoading()
     fun hideLoading()
-    val context: Context?
-    val activity: Activity?
+    val context: Context
+    val activity: Activity
 
     fun showError(message: String)
-    fun getSupportFragmentManager(): FragmentManager?
+    fun getSupportFragmentManager(): FragmentManager
 }

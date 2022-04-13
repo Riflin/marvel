@@ -81,7 +81,7 @@
 
                     <TextView
                         android:id="@+id/tvFiltroNombre"
-                        style="@style/MarvelButtonStyle"
+                        style="@style/RedButtonStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
@@ -130,7 +130,7 @@
 
                     <TextView
                         android:id="@+id/tvFiltroFecha"
-                        style="@style/MarvelButtonStyle"
+                        style="@style/RedButtonStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
@@ -185,7 +185,7 @@
 
                     <TextView
                         android:id="@+id/tvSortName"
-                        style="@style/MarvelButtonStyle"
+                        style="@style/RedButtonStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
@@ -225,7 +225,7 @@
 
                     <TextView
                         android:id="@+id/tvSortDate"
-                        style="@style/MarvelButtonStyle"
+                        style="@style/RedButtonStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
@@ -254,9 +254,8 @@
                 android:id="@+id/tvBuscar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/filtros_selector"
+                style="@style/MarvelButtonStyle"
                 android:gravity="center"
-                android:padding="4dp"
                 android:text="@string/buscar"
                 android:textColor="@color/white"
                 android:textSize="14sp"

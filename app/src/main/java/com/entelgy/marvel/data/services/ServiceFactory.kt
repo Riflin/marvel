@@ -21,21 +21,7 @@ object ServiceFactory {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BASIC
 
-        val timestamp = System.currentTimeMillis()
-        val hash = Utils.getHash(timestamp)
-
-        /* Con este parameter añadimos siempre los tres parámetros que debemos pasar
-         * a cualquier llamada a la api de marvel para que funcione bien */
-        val parametersInterceptor = Interceptor { chain ->
-            var request: Request = chain.request()
-            val url: HttpUrl = request.url.newBuilder()
-                .addQueryParameter("ts", timestamp.toString())
-                .addQueryParameter("apikey", Constants.PUBLIC_KEY)
-                .addQueryParameter("hash", hash)
-                .build()
-            request = request.newBuilder().url(url).build()
-            chain.proceed(request)
-        }
+        val parametersInterceptor = getParamsInterceptor()
 
         val client = OkHttpClient.Builder().addInterceptor(interceptor)
             .addInterceptor(parametersInterceptor)
@@ -52,6 +38,25 @@ object ServiceFactory {
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
 
+    }
+
+    fun getParamsInterceptor(): Interceptor {
+        val timestamp = System.currentTimeMillis()
+        val hash = Utils.getHash(timestamp)
+
+        /* Con este parameter añadimos siempre los tres parámetros que debemos pasar
+         * a cualquier llamada a la api de marvel para que funcione bien */
+        val parametersInterceptor = Interceptor { chain ->
+            var request: Request = chain.request()
+            val url: HttpUrl = request.url.newBuilder()
+                .addQueryParameter("ts", timestamp.toString())
+                .addQueryParameter("apikey", Constants.PUBLIC_KEY)
+                .addQueryParameter("hash", hash)
+                .build()
+            request = request.newBuilder().url(url).build()
+            chain.proceed(request)
+        }
+        return parametersInterceptor
     }
 
     fun getCharactersService(): CharactersService {

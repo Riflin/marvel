@@ -8,6 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="translucid_black">#AA000000</color>
     <color name="colorAccent">#202020</color>
     <color name="colorPrimary">#E62429</color>
     <color name="colorPrimaryDark">#9F0013</color>
@@ -15,6 +16,9 @@
     <color name="transparent">#00FFFFFF</color>
     <color name="almost_transparent_grey">#69ababab</color>
     <color name="grey">#AAAAAA</color>
+    <color name="light_grey">#CCCCCC</color>
     <color name="green">#64dd17</color>
     <color name="dark_green">#1b5e20</color>
+    <color name="cyan">#2196F3</color>
+    <color name="dark_blue">#1C40C1</color>
 </resources>

@@ -1,7 +1,12 @@
 package com.entelgy.marvel.data.utils
 
+import android.content.Context
+import com.entelgy.marvel.data.services.ServiceFactory
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.squareup.picasso.OkHttp3Downloader
+import com.squareup.picasso.Picasso
+import okhttp3.OkHttpClient
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
@@ -12,7 +17,7 @@ object Utils {
      */
     fun getGson(): Gson {
         val builder = GsonBuilder()
-        builder.setDateFormat("yyyy-MM-ddTHH:mm:ssZ")
+        builder.setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
 
         return builder.create()
     }
