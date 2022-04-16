@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="writer">
+        <item quantity="one">@string/writer</item>
+        <item quantity="other">@string/writers</item>
+    </plurals>
+    <plurals name="penciller">
+        <item quantity="one">@string/penciller</item>
+        <item quantity="other">@string/pencillers</item>
+    </plurals>
+    <plurals name="penciller_cover">
+        <item quantity="one">@string/penciller_cover</item>
+        <item quantity="other">@string/pencillers_cover</item>
+    </plurals>
+    <plurals name="letterer">
+        <item quantity="one">@string/letterer</item>
+        <item quantity="other">@string/letterers</item>
+    </plurals>
+    <plurals name="inker">
+        <item quantity="one">@string/inker</item>
+        <item quantity="other">@string/inkers</item>
+    </plurals>
+    <plurals name="colorist">
+        <item quantity="one">@string/colorist</item>
+        <item quantity="other">@string/colorists</item>
+    </plurals>
+    <plurals name="editor">
+        <item quantity="one">@string/editor</item>
+        <item quantity="other">@string/editors</item>
+    </plurals>
+</resources>

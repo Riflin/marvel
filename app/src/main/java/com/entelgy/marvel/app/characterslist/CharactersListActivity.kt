@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.entelgy.marvel.R
+import com.entelgy.marvel.app.callbacks.OnBottomReachedListener
 import com.entelgy.marvel.app.characterslist.adapter.CharactersAdapter
 import com.entelgy.marvel.app.characterslist.presenter.CharactersListPresenter
 import com.entelgy.marvel.app.presenter.PresenterFactory
@@ -18,7 +18,7 @@ import com.entelgy.marvel.databinding.ActivityCharactersListBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CharactersListActivity: BaseActivity(), CharactersListView {
+class CharactersListActivity: BaseActivity(), CharactersListView, OnBottomReachedListener {
 
 
     companion object {
@@ -40,6 +40,11 @@ class CharactersListActivity: BaseActivity(), CharactersListView {
 
         //Obtenemos los personajes de primeras
         presenter.getDataFromServer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroy()
     }
 
     override fun init() {
@@ -93,12 +98,8 @@ class CharactersListActivity: BaseActivity(), CharactersListView {
         }
     }
 
-    override fun showLoading() {
-        binding.swRefresh.isRefreshing = true
-    }
-
-    override fun hideLoading() {
-        binding.swRefresh.isRefreshing = false
+    override fun showLoading(show: Boolean) {
+        binding.swRefresh.isRefreshing = show
     }
 
     override fun onFilterNameSelected(filter: String) {
@@ -186,7 +187,7 @@ class CharactersListActivity: BaseActivity(), CharactersListView {
 
     override fun showCharacters(characters: List<Character>) {
         if (characters.isNotEmpty()) {
-            adapter = CharactersAdapter(this, characters, presenter)
+            adapter = CharactersAdapter(this, characters, presenter, this)
             binding.rvCharacters.adapter = adapter
             binding.swRefresh.visibility = View.VISIBLE
             binding.swEmptyRefresh.visibility = View.GONE
@@ -198,5 +199,13 @@ class CharactersListActivity: BaseActivity(), CharactersListView {
 
     override fun addCharacters(characters: List<Character>) {
         adapter?.addCharacters(characters)
+    }
+
+    override fun onBottomReached() {
+        presenter.getMoreCharacters()
+    }
+
+    override fun showCopyright(copyright: String?) {
+        binding.tvCopyright.text = copyright ?: getString(R.string.copyright)
     }
 }

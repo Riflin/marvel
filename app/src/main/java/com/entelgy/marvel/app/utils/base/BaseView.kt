@@ -5,8 +5,7 @@ import android.content.Context
 import androidx.fragment.app.FragmentManager
 
 interface BaseView {
-    fun showLoading()
-    fun hideLoading()
+    fun showLoading(show: Boolean = true)
     val context: Context
     val activity: Activity
 

@@ -41,11 +41,7 @@ class SplashActivity: BaseActivity() {
 
     }
 
-    override fun showLoading() {
-
-    }
-
-    override fun hideLoading() {
-
+    override fun showLoading(show: Boolean) {
+        //NOTHING HERE
     }
 }

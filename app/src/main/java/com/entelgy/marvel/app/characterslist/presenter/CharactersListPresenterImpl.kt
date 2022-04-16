@@ -1,16 +1,14 @@
 package com.entelgy.marvel.app.characterslist.presenter
 
-import android.util.Log
-import android.widget.Toast
+import android.content.Intent
 import androidx.fragment.app.DialogFragment
+import com.entelgy.marvel.app.characterdetails.CharacterDetailsActivity
 import com.entelgy.marvel.app.callbacks.NameFilterCallback
 import com.entelgy.marvel.app.characterslist.CharactersListView
 import com.entelgy.marvel.app.characterslist.dialog.DialogFiltroNombre
-import com.entelgy.marvel.app.utils.Utils
 import com.entelgy.marvel.data.model.Sort
 import com.entelgy.marvel.data.model.characters.Character
 import com.entelgy.marvel.data.model.characters.CharacterDataContainer
-import com.entelgy.marvel.data.model.characters.CharacterDataWrapper
 import com.entelgy.marvel.domain.usecases.network.characters.GetCharactersFromServer
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
 import kotlinx.coroutines.*
@@ -26,13 +24,12 @@ class CharactersListPresenterImpl() : CharactersListPresenter,
         get() = Dispatchers.Main + job
     private val job = Job()
 
-    private var deferredCharacters: Deferred<CharacterDataWrapper>? = null
-
     private var sortName: Sort? = null
     private var sortDate: Sort? = null
 
     private var filterName: String? = null
     private var filterDate: Date? = null
+
 
     private var lastDataFetched: CharacterDataContainer? = null
 
@@ -58,10 +55,6 @@ class CharactersListPresenterImpl() : CharactersListPresenter,
 
     override fun destroy() {
         view = null
-        //Si aún estamos carganado una llamada al servidor, la cancelamos
-        if (deferredCharacters?.isActive == true) {
-            deferredCharacters?.cancel()
-        }
     }
 
     override fun selectNameFilter() {
@@ -76,7 +69,8 @@ class CharactersListPresenterImpl() : CharactersListPresenter,
         val dialog = view?.getSupportFragmentManager()?.findFragmentByTag("NAME") as? DialogFragment
         dialog?.dismiss()
 
-        filterName = name
+        //Quitamos cualquier espacio que hubiera podido quedarse
+        filterName = name?.trim()
 
         if (name != null) {
             view?.onFilterNameSelected(name)
@@ -154,49 +148,61 @@ class CharactersListPresenterImpl() : CharactersListPresenter,
     }
 
     override fun getDataFromServer() {
+        downloadCharacters()
+    }
+
+    private fun downloadCharacters(loadMoreCharacters: Boolean = false) {
         launch {
             view?.showLoading()
-//            val async1 = async(Dispatchers.IO) {
-                val sort = when(sortDate) {
-                    Sort.Ascending -> "date"
-                    Sort.Descending -> "-date"
-                    null -> {
-                        when (sortName) {
-                            Sort.Ascending -> "name"
-                            Sort.Descending -> "-name"
-                            null -> ""
-                        }
-                    }
-                }
+            val sort = getSortParameter()
             try {
                 val result = GetCharactersFromServer(filterName, filterDate, sort).downloadData()
-//            }
 
-//            val result = async1
                 if (result.isSuccessful) {
-                    Log.i("CHARACTERS", "CALL SUCCESS: ${result.body()}")
-                    view?.hideLoading()
-                    val characterDataWrapper = result.body()?.data
-                    if (characterDataWrapper != null) {
-                        view?.showCharacters(characterDataWrapper.results)
+                    view?.showLoading(false)
+                    val dataWrapper = result.body()
+                    lastDataFetched = dataWrapper?.data
+                    lastDataFetched?.let {
+                        view?.showCopyright(dataWrapper!!.attributionText)
+                        if (loadMoreCharacters) {
+                            view?.addCharacters(it.results)
+                        } else {
+                            view?.showCharacters(it.results)
+                        }
                     }
                 } else {
-                    Log.w("CHARACTERS", "CALL FAILED: ${result.errorBody()?.string()}")
+                    view?.showLoading(false)
+                    view?.showError(result.errorBody()?.string() ?: "Error obteniendo personajes")
                 }
             } catch (e: Exception) {
-                Utils.showDialogInformacion(view!!.getSupportFragmentManager(), "ATENCION", e.message)
+                view?.showLoading(false)
+                view?.showError(e.message ?: "Error obteniendo personajes")
             }
         }
-//        Toast.makeText(view?.context, "NOT YET IMPLEMENTED", Toast.LENGTH_LONG).show()
-//        Handler().postDelayed({view?.hideLoading()}, 3000)
+    }
+
+    private fun getSortParameter(): String {
+        val sort = when (sortDate) {
+            Sort.Ascending -> "date"
+            Sort.Descending -> "-date"
+            null -> {
+                when (sortName) {
+                    Sort.Ascending -> "name"
+                    Sort.Descending -> "-name"
+                    null -> ""
+                }
+            }
+        }
+        return sort
     }
 
     override fun getMoreCharacters() {
-        Toast.makeText(view?.context, "NOT YET IMPLEMENTED", Toast.LENGTH_LONG).show()
+        downloadCharacters(loadMoreCharacters = true)
     }
 
     override fun onCharacterSelected(character: Character) {
-        Toast.makeText(view?.context, "NOT YET IMPLEMENTED", Toast.LENGTH_LONG).show()
+//        view?.context?.startActivity(CharacterDetailsActivity.createNewIntent(view!!.context, character.id ?: 0))
+        view?.context?.startActivity(CharacterDetailsActivity.createNewIntent(view!!.context, character))
     }
 
     private inner class FechaListener : DatePickerDialog.OnDateSetListener {

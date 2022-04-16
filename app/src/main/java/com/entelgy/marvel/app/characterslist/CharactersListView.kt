@@ -34,4 +34,6 @@ interface CharactersListView : BaseView {
     fun showCharacters(characters: List<Character>)
 
     fun addCharacters(characters: List<Character>)
+
+    fun showCopyright(copyright: String?)
 }

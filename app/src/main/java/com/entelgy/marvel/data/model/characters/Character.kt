@@ -3,6 +3,7 @@ package com.entelgy.marvel.data.model.characters
 import android.os.Parcel
 import android.os.Parcelable
 import com.entelgy.marvel.data.model.*
+import com.entelgy.marvel.data.model.imageformats.FullSizeImage
 import com.entelgy.marvel.data.model.imageformats.ImageFormat
 import com.entelgy.marvel.data.model.imageformats.PortraitImage
 import com.google.gson.annotations.SerializedName
@@ -49,7 +50,10 @@ data class Character(
     )
 
     fun getThumbnailPath(imageFormat: ImageFormat): String {
-        return thumbnail?.path + "/" + PortraitImage.Xlarge.format() + "." + thumbnail?.extension
+        return when (imageFormat) {
+            is FullSizeImage -> thumbnail?.path + "." + thumbnail?.extension
+            else -> thumbnail?.path + "/" + PortraitImage.Xlarge.format() + "." + thumbnail?.extension
+        }
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

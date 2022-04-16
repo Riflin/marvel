@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.entelgy.marvel.R
 import com.entelgy.marvel.app.callbacks.CharactersCallback
+import com.entelgy.marvel.app.callbacks.OnBottomReachedListener
 import com.entelgy.marvel.app.utils.Utils
 import com.entelgy.marvel.data.model.imageformats.PortraitImage
 import com.entelgy.marvel.data.model.characters.Character
@@ -16,7 +17,9 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
 class CharactersAdapter(private val context: Context, characters: List<Character>,
-                        private val callback: CharactersCallback): RecyclerView.Adapter<CharactersAdapter.CharacterViewHolder>() {
+                        private val callback: CharactersCallback,
+                        private val listener: OnBottomReachedListener
+): RecyclerView.Adapter<CharactersAdapter.CharacterViewHolder>() {
 
     private val inflater = LayoutInflater.from(context)
 
@@ -31,6 +34,10 @@ class CharactersAdapter(private val context: Context, characters: List<Character
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
         val character = charactersList[position]
+
+        if (position == charactersList.size - 1) {
+            listener.onBottomReached()
+        }
 
         holder.bind(character)
     }
@@ -63,7 +70,6 @@ class CharactersAdapter(private val context: Context, characters: List<Character
                     override fun onError(e: Exception?) {
                         binding.ivThumbnail.setImageResource(R.drawable.ic_broken_image)
                         binding.imageProgress.visibility = View.GONE
-                        Log.w("FOTO", e?.message ?: "NO ERROR MESSAGE")
                     }
                 })
 

@@ -6,9 +6,10 @@ import com.entelgy.marvel.data.providers.CharactersNetworkProvider
 import com.entelgy.marvel.data.providers.ComicsNetworkProvider
 import com.entelgy.marvel.data.services.ServiceFactory
 import com.entelgy.marvel.domain.NetworkUseCase
+import retrofit2.Response
 
 class GetComicDetails(private val comicId: Int): NetworkUseCase<ComicDataWrapper>() {
-    override suspend fun downloadData(): ComicDataWrapper {
+    override suspend fun downloadData(): Response<ComicDataWrapper> {
         return ComicsNetworkProvider(ServiceFactory.getComicsService()).getComicDetails(comicId)
     }
 }

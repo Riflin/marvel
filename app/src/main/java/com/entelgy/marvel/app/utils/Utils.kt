@@ -46,4 +46,16 @@ object Utils {
             .build()
 
     }
+
+    /**
+     * Método creado para calcular el número total de filas a mostrar en un adapter de los artículos
+     * (comics, eventos, etc) de un personaje en particular
+     */
+    fun getItemCount(list: List<*>, totalItems: Int): Int {
+        return when  {
+            list.isEmpty() -> 0
+            list.size < totalItems -> list.size + 1
+            else -> list.size
+        }
+    }
 }

@@ -10,7 +10,7 @@
 
     <color name="translucid_black">#AA000000</color>
     <color name="colorAccent">#202020</color>
-    <color name="colorPrimary">#E62429</color>
+    <color name="colorPrimary">#EC1D24</color>
     <color name="colorPrimaryDark">#9F0013</color>
     <color name="dark_grey">#616161</color>
     <color name="transparent">#00FFFFFF</color>
@@ -21,4 +21,8 @@
     <color name="dark_green">#1b5e20</color>
     <color name="cyan">#2196F3</color>
     <color name="dark_blue">#1C40C1</color>
+    <color name="grey_not_selected">#767676</color>
+    <color name="red_selected">#E62429</color>
+    <color name="grey_separator">#393939</color>
+    <color name="light_blue">#A2DEFF</color>
 </resources>

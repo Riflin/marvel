@@ -1,33 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.entelgy.marvel">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:usesCleartextTraffic="true"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Marvel">
+        android:theme="@style/Theme.Marvel"
+        android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".app.splash.SplashActivity"
+            android:exported="true"
+            android:screenOrientation="fullSensor"
+            android:theme="@style/Theme.Marvel.NoActionBar">
+
+        </activity>
         <activity
             android:name=".app.characterslist.CharactersListActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Marvel.NoActionBar"
-            android:screenOrientation="fullSensor"/>
-
-        <activity android:name=".app.splash.SplashActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Marvel.NoActionBar"
-            android:screenOrientation="fullSensor">
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".app.characterdetails.CharacterDetailsActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Marvel.NoActionBar"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".app.webview.WebActivity"
+            android:configChanges="keyboard|orientation"
+            android:exported="true"
+            android:theme="@style/Theme.Marvel.NoActionBar" />
+
+        <activity android:name=".app.photos.PhotoActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="fullSensor"
+            android:label="@string/photo_detail"/>
     </application>
 
 </manifest>
