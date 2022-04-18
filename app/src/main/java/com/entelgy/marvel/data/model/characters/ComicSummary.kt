@@ -1,4 +1,4 @@
-package com.entelgy.marvel.data.model
+package com.entelgy.marvel.data.model.characters
 
 import android.os.Parcel
 import android.os.Parcelable

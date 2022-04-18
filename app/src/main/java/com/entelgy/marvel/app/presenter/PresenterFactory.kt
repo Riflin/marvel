@@ -4,6 +4,8 @@ import com.entelgy.marvel.app.characterdetails.presenter.CharacterDetailsPresent
 import com.entelgy.marvel.app.characterdetails.presenter.CharacterDetailsPresenterImpl
 import com.entelgy.marvel.app.characterslist.presenter.CharactersListPresenter
 import com.entelgy.marvel.app.characterslist.presenter.CharactersListPresenterImpl
+import com.entelgy.marvel.app.comicdetails.presenter.ComicDetailsPresenter
+import com.entelgy.marvel.app.comicdetails.presenter.ComicDetailsPresenterImpl
 import com.entelgy.marvel.app.photos.presenter.PhotoPresenter
 import com.entelgy.marvel.app.photos.presenter.PhotoPresenterImpl
 import com.entelgy.marvel.app.webview.presenter.WebPresenter
@@ -15,6 +17,7 @@ object PresenterFactory {
     private var characterDetailsPresenter: CharacterDetailsPresenter? = null
     private var webPresenter: WebPresenter? = null
     private var photoPresenter: PhotoPresenter? = null
+    private var comicDetailsPresenter: ComicDetailsPresenter? = null
 
     fun getCharactersListPresenter(): CharactersListPresenter {
         return if (charactersListPresenter == null) {
@@ -49,6 +52,15 @@ object PresenterFactory {
             photoPresenter!!
         } else {
             photoPresenter!!
+        }
+    }
+
+    fun getComicDetailPresenter(): ComicDetailsPresenter {
+        return if (comicDetailsPresenter == null) {
+            comicDetailsPresenter = ComicDetailsPresenterImpl()
+            comicDetailsPresenter!!
+        } else {
+            comicDetailsPresenter!!
         }
     }
 }

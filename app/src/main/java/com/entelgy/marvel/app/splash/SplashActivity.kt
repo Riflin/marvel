@@ -44,4 +44,8 @@ class SplashActivity: BaseActivity() {
     override fun showLoading(show: Boolean) {
         //NOTHING HERE
     }
+
+    override fun onDataError() {
+        //NOTHING HERE
+    }
 }

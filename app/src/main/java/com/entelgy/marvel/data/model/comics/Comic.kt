@@ -5,9 +5,14 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.entelgy.marvel.R
 import com.entelgy.marvel.data.model.*
+import com.entelgy.marvel.data.model.characters.ComicSummary
+import com.entelgy.marvel.data.model.imageformats.FullSizeImage
+import com.entelgy.marvel.data.model.imageformats.ImageFormat
+import com.entelgy.marvel.data.model.imageformats.PortraitImage
 import com.entelgy.marvel.data.utils.Constants
 import com.google.gson.annotations.SerializedName
 import java.util.*
+import kotlin.collections.ArrayList
 
 data class Comic(
     @SerializedName("id")
@@ -164,17 +169,68 @@ data class Comic(
         return "Comic(id=$id, digitalId=$digitalId, title=$title, issueNumber=$issueNumber, variantDescription=$variantDescription, description=$description, modified=$modified, isbn=$isbn, upc=$upc, diamondCode=$diamondCode, ean=$ean, issn=$issn, format=$format, pageCount=$pageCount, textObjects=$textObjects, resourceURI=$resourceURI, urls=$urls, series=$series, variants=$variants, collections=$collections, collectedIssues=$collectedIssues, dates=$dates, prices=$prices, thumbnail=$thumbnail, images=$images, creators=$creators, characters=$characters, stories=$stories, events=$events)"
     }
 
+    fun getThumbnailPath(imageFormat: ImageFormat): String {
+        return when (imageFormat) {
+            is FullSizeImage -> thumbnail?.path + "." + thumbnail?.extension
+            else -> thumbnail?.path + "/" + PortraitImage.Xlarge.format() + "." + thumbnail?.extension
+        }
+    }
+
     fun getRole(context: Context, role: String, quantity: Int): String {
         return when (role) {
             Constants.WRITER -> context.resources.getQuantityString(R.plurals.writer, quantity)
-            Constants.PENCILLER -> context.resources.getQuantityString(R.plurals.penciller, quantity)
-            Constants.PENCILLER_COVER -> context.resources.getQuantityString(R.plurals.penciller_cover, quantity)
+            Constants.PENCILLER, Constants.PENCILER -> context.resources.getQuantityString(R.plurals.penciller, quantity)
+            Constants.PENCILLER_COVER, Constants.PENCILER_COVER -> context.resources.getQuantityString(R.plurals.penciller_cover, quantity)
             Constants.LETTERER -> context.resources.getQuantityString(R.plurals.letterer, quantity)
             Constants.COLORIST -> context.resources.getQuantityString(R.plurals.colorist, quantity)
+            Constants.COLORIST_COVER -> context.resources.getQuantityString(R.plurals.colorist_cover, quantity)
             Constants.EDITOR -> context.resources.getQuantityString(R.plurals.editor, quantity)
+            Constants.EDITOR_COVER -> context.resources.getQuantityString(R.plurals.editor_cover, quantity)
             Constants.INKER -> context.resources.getQuantityString(R.plurals.inker, quantity)
+            Constants.INKER_COVER -> context.resources.getQuantityString(R.plurals.inker_cover, quantity)
+            Constants.PAINTER -> context.resources.getQuantityString(R.plurals.inker, quantity)
+            Constants.PAINTER_COVER -> context.resources.getQuantityString(R.plurals.inker_cover, quantity)
             else -> role
         }
+    }
+
+    fun getCreatorsByRole(role: String): List<CreatorSummary> {
+        val list = ArrayList<CreatorSummary>()
+        creators?.let { creators ->
+            for (creator in creators.items)
+                if (creator.role == role) {
+                    list.add(creator)
+                }
+        }
+
+        return list
+    }
+
+    fun getPublicationDate(): Date? {
+        for (date in dates) {
+            if (date.type == Constants.PUBLICATION_DATE) {
+                return date.date
+            }
+        }
+        return null
+    }
+
+    fun getFocDate(): Date? {
+        for (date in dates) {
+            if (date.type == Constants.FINAL_ORDERDER_CUTOFF_DATE) {
+                return date.date
+            }
+        }
+        return null
+    }
+
+    fun getMarvelUnlimitedDate(): Date? {
+        for (date in dates) {
+            if (date.type == Constants.MARVEL_UNLIMITED_DATE) {
+                return date.date
+            }
+        }
+        return null
     }
 
     companion object CREATOR : Parcelable.Creator<Comic> {

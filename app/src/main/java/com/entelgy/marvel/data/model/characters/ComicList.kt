@@ -1,4 +1,4 @@
-package com.entelgy.marvel.data.model
+package com.entelgy.marvel.data.model.characters
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -18,7 +18,7 @@ data class ComicList(
         parcel.readValue(Int::class.java.classLoader) as? Int,
         parcel.readValue(Int::class.java.classLoader) as? Int,
         parcel.readString(),
-        parcel.createTypedArrayList(ComicSummary.CREATOR) ?: ArrayList()
+        parcel.createTypedArrayList(ComicSummary) ?: ArrayList()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

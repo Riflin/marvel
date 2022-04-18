@@ -1,7 +1,7 @@
 package com.entelgy.marvel.app.characterslist
 
 import com.entelgy.marvel.app.utils.base.BaseView
-import com.entelgy.marvel.data.model.Sort
+import com.entelgy.marvel.data.model.utils.Sort
 import com.entelgy.marvel.data.model.characters.Character
 import java.util.*
 

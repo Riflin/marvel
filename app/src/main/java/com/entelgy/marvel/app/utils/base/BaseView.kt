@@ -7,8 +7,9 @@ import androidx.fragment.app.FragmentManager
 interface BaseView {
     fun showLoading(show: Boolean = true)
     val context: Context
-    val activity: Activity
 
     fun showError(message: String)
     fun getSupportFragmentManager(): FragmentManager
+
+    fun onDataError()
 }

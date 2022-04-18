@@ -12,7 +12,7 @@ import com.entelgy.marvel.app.characterslist.adapter.CharactersAdapter
 import com.entelgy.marvel.app.characterslist.presenter.CharactersListPresenter
 import com.entelgy.marvel.app.presenter.PresenterFactory
 import com.entelgy.marvel.app.utils.base.BaseActivity
-import com.entelgy.marvel.data.model.Sort
+import com.entelgy.marvel.data.model.utils.Sort
 import com.entelgy.marvel.data.model.characters.Character
 import com.entelgy.marvel.databinding.ActivityCharactersListBinding
 import java.text.SimpleDateFormat
@@ -207,5 +207,9 @@ class CharactersListActivity: BaseActivity(), CharactersListView, OnBottomReache
 
     override fun showCopyright(copyright: String?) {
         binding.tvCopyright.text = copyright ?: getString(R.string.copyright)
+    }
+
+    override fun onDataError() {
+        //NOTHING HERE
     }
 }

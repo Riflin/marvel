@@ -12,8 +12,6 @@ abstract class BaseActivity: AppCompatActivity(), BaseView {
 
     override val context: Context
         get() = this
-    override val activity: Activity
-        get() = this
 
     override fun setContentView(view: View?) {
         super.setContentView(view)

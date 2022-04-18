@@ -2,6 +2,7 @@ package com.entelgy.marvel.app.characterdetails
 
 import com.entelgy.marvel.app.utils.base.BaseView
 import com.entelgy.marvel.data.model.*
+import com.entelgy.marvel.data.model.characters.ComicList
 import java.util.ArrayList
 
 interface CharacterDetailsView: BaseView {
@@ -13,8 +14,6 @@ interface CharacterDetailsView: BaseView {
     fun showBio(bio: String?)
 
     fun showNumberOfItems(comics: Int, series: Int, events: Int, stories: Int)
-
-    fun onDataError()
 
     fun onCharacterNotFound()
 

@@ -2,6 +2,8 @@ package com.entelgy.marvel.data.model.comics
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.annotation.StringRes
+import com.entelgy.marvel.R
 import com.google.gson.annotations.SerializedName
 
 data class ComicPrice(
@@ -58,6 +60,7 @@ data class ComicPrice(
 
 }
 
-enum class PriceType(val tipo: String) {
-    Impreso("printPrice"), Digital("digitalPurchasePrice")
+enum class PriceType(val tipo: String, @StringRes val text: Int) {
+    Impreso("printPrice", R.string.precio_impreso), Digital("digitalPurchasePrice", R.string.precio_digital)
+
 }

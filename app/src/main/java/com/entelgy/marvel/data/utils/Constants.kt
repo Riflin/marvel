@@ -11,6 +11,10 @@ object Constants {
 
     const val CHARACTER_ID = "characterId"
     const val CHARACTER = "character"
+
+    const val COMIC_ID = "comicId"
+    const val COMIC = "comic"
+
     const val URL = "url"
 
     const val TYPE_ITEM = 0
@@ -18,9 +22,21 @@ object Constants {
 
     const val WRITER = "writer"
     const val PENCILLER = "penciller"
+    const val PENCILER = "penciler"
     const val PENCILLER_COVER = "penciller (cover)"
+    const val PENCILER_COVER = "penciler (cover)"
     const val LETTERER = "letterer"
     const val INKER = "inker"
+    const val INKER_COVER = "inker (cover)"
     const val COLORIST = "colorist"
+    const val COLORIST_COVER = "colorist (cover)"
     const val EDITOR = "editor"
+    const val EDITOR_COVER = "editor (cover)"
+    const val PAINTER = "painter"
+    const val PAINTER_COVER = "painter (cover)"
+
+    const val PUBLICATION_DATE = "onsaleDate"
+    const val FINAL_ORDERDER_CUTOFF_DATE = "focDate"
+    const val MARVEL_UNLIMITED_DATE = "unlimitedDate"
+    const val DIGITAL_PURCHASE_DATE = "unlimitedDate"
 }

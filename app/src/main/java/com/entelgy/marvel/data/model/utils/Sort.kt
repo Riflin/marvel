@@ -1,4 +1,4 @@
-package com.entelgy.marvel.data.model
+package com.entelgy.marvel.data.model.utils
 
 /**
  * Enum para determinar las posibles ordenaciones

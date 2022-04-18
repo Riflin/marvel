@@ -1,6 +1,6 @@
 package com.entelgy.marvel.app.callbacks
 
-import com.entelgy.marvel.data.model.ComicSummary
+import com.entelgy.marvel.data.model.characters.ComicSummary
 
 interface ComicsCallback {
 

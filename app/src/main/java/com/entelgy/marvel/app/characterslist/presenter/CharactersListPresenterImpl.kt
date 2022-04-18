@@ -1,12 +1,12 @@
 package com.entelgy.marvel.app.characterslist.presenter
 
-import android.content.Intent
 import androidx.fragment.app.DialogFragment
 import com.entelgy.marvel.app.characterdetails.CharacterDetailsActivity
 import com.entelgy.marvel.app.callbacks.NameFilterCallback
 import com.entelgy.marvel.app.characterslist.CharactersListView
 import com.entelgy.marvel.app.characterslist.dialog.DialogFiltroNombre
-import com.entelgy.marvel.data.model.Sort
+import com.entelgy.marvel.data.model.CharacterSummary
+import com.entelgy.marvel.data.model.utils.Sort
 import com.entelgy.marvel.data.model.characters.Character
 import com.entelgy.marvel.data.model.characters.CharacterDataContainer
 import com.entelgy.marvel.domain.usecases.network.characters.GetCharactersFromServer
@@ -203,6 +203,14 @@ class CharactersListPresenterImpl() : CharactersListPresenter,
     override fun onCharacterSelected(character: Character) {
 //        view?.context?.startActivity(CharacterDetailsActivity.createNewIntent(view!!.context, character.id ?: 0))
         view?.context?.startActivity(CharacterDetailsActivity.createNewIntent(view!!.context, character))
+    }
+
+    override fun onCharacterSelected(character: CharacterSummary) {
+        //NOTHING HERE
+    }
+
+    override fun onMoreCharactersSelected() {
+        //NOTHING HERE
     }
 
     private inner class FechaListener : DatePickerDialog.OnDateSetListener {

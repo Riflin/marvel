@@ -15,6 +15,7 @@ import com.entelgy.marvel.app.utils.base.BaseActivity
 import com.entelgy.marvel.app.webview.WebActivity
 import com.entelgy.marvel.data.model.*
 import com.entelgy.marvel.data.model.characters.Character
+import com.entelgy.marvel.data.model.characters.ComicList
 import com.entelgy.marvel.data.utils.Constants
 import com.entelgy.marvel.databinding.ActivityCharacterDetailsBinding
 import com.squareup.picasso.Callback

@@ -4,13 +4,12 @@ import android.content.Intent
 import android.widget.Toast
 import com.entelgy.marvel.app.characterdetails.CharacterDetailsView
 import com.entelgy.marvel.app.photos.PhotoActivity
-import com.entelgy.marvel.app.webview.WebActivity
 import com.entelgy.marvel.data.model.*
 import com.entelgy.marvel.data.model.characters.Character
 import com.entelgy.marvel.data.model.characters.CharacterDataWrapper
+import com.entelgy.marvel.data.model.characters.ComicSummary
 import com.entelgy.marvel.data.model.imageformats.FullSizeImage
 import com.entelgy.marvel.data.model.imageformats.LandscapeImage
-import com.entelgy.marvel.data.model.imageformats.PortraitImage
 import com.entelgy.marvel.data.utils.Constants
 import com.entelgy.marvel.domain.usecases.network.characters.GetCharacterDetails
 import kotlinx.coroutines.CoroutineScope
@@ -101,6 +100,9 @@ class CharacterDetailsPresenterImpl : CharacterDetailsPresenter, CoroutineScope 
                         null -> {
                             view?.onCharacterNotFound()
                         }
+                        else -> {
+                            view?.onCharacterNotFound()
+                        }
                     }
                 } else {
                     val jsonObj = JSONObject(result.errorBody()?.charStream()?.readText() ?: "{\"msg\":\"\"}")
@@ -113,7 +115,7 @@ class CharacterDetailsPresenterImpl : CharacterDetailsPresenter, CoroutineScope 
     }
 
     private fun showDataFromCharacter(character: Character,
-                                      characterDataWrapper: CharacterDataWrapper?): Unit? {
+                                      characterDataWrapper: CharacterDataWrapper?) {
         //Mostramos la imagen
         view?.showImage(character.getThumbnailPath(LandscapeImage.Incredible))
         //Mostramos el nombre del personaje
@@ -132,7 +134,7 @@ class CharacterDetailsPresenterImpl : CharacterDetailsPresenter, CoroutineScope 
         //Mostramos los enlaces
         view?.showUrls(character.urls)
         //De primeras, mostramos los comics
-        return view?.showComics(character.commics)
+        view?.showComics(character.commics)
     }
 
     override fun showComics() {
@@ -153,7 +155,7 @@ class CharacterDetailsPresenterImpl : CharacterDetailsPresenter, CoroutineScope 
 
     override fun showPhotoDetail() {
         character?.let { character ->
-            view?.activity?.startActivity(PhotoActivity.createNewIntent(view!!.context, character.getThumbnailPath(FullSizeImage())))
+            view?.context?.startActivity(PhotoActivity.createNewIntent(view!!.context, character.getThumbnailPath(FullSizeImage())))
         }
     }
 
