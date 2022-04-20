@@ -1,7 +1,7 @@
 package com.entelgy.marvel.data.services
 
 import com.entelgy.marvel.data.utils.Constants
-import com.entelgy.marvel.data.utils.Utils
+import com.entelgy.marvel.data.utils.DataUtils
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -17,7 +17,7 @@ object ServiceFactory {
 
     private const val TIMEOUT = 600L
 
-    fun getRetrofit(): Retrofit {
+    private fun getRetrofit(): Retrofit {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BASIC
 
@@ -33,8 +33,7 @@ object ServiceFactory {
 
         return Retrofit.Builder().baseUrl(Constants.URL_BASE)
             .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create(Utils.getGson()))
+            .addConverterFactory(GsonConverterFactory.create(DataUtils.getGson()))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
 
@@ -42,7 +41,7 @@ object ServiceFactory {
 
     fun getParamsInterceptor(): Interceptor {
         val timestamp = System.currentTimeMillis()
-        val hash = Utils.getHash(timestamp)
+        val hash = DataUtils.getHash(timestamp)
 
         /* Con este parameter añadimos siempre los tres parámetros que debemos pasar
          * a cualquier llamada a la api de marvel para que funcione bien */

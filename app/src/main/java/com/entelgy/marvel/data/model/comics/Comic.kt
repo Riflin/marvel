@@ -22,7 +22,7 @@ data class Comic(
     @SerializedName("title")
     val title: String?,
     @SerializedName("issueNumber")
-    val issueNumber: Double?,
+    val issueNumber: Int?,
     @SerializedName("variantDescription")
     val variantDescription: String?,
     @SerializedName("description")
@@ -78,7 +78,7 @@ data class Comic(
         parcel.readValue(Int::class.java.classLoader) as? Int,
         parcel.readValue(Int::class.java.classLoader) as? Int,
         parcel.readString(),
-        parcel.readValue(Double::class.java.classLoader) as? Double,
+        parcel.readValue(Int::class.java.classLoader) as? Int,
         parcel.readString(),
         parcel.readString(),
         //Dependiendo del byte de control, crearemos una fecha con su timestamp correspondiente o la dejamos a null
@@ -194,11 +194,22 @@ data class Comic(
         }
     }
 
-    fun getCreatorsByRole(role: String): List<CreatorSummary> {
+    /**
+     * Obtiene la descripción preferida para este comic
+     */
+    fun getPreferredDescription(): String? {
+        return when {
+            description != null -> description
+            textObjects.isNotEmpty() -> textObjects[0].text
+            else -> null
+        }
+    }
+
+    fun getCreatorsByRole(role: Role): List<CreatorSummary> {
         val list = ArrayList<CreatorSummary>()
         creators?.let { creators ->
             for (creator in creators.items)
-                if (creator.role == role) {
+                if (creator.role == role.rol) {
                     list.add(creator)
                 }
         }
@@ -227,6 +238,15 @@ data class Comic(
     fun getMarvelUnlimitedDate(): Date? {
         for (date in dates) {
             if (date.type == Constants.MARVEL_UNLIMITED_DATE) {
+                return date.date
+            }
+        }
+        return null
+    }
+
+    fun getDigitalPurchaseDate(): Date? {
+        for (date in dates) {
+            if (date.type == Constants.DIGITAL_PURCHASE_DATE) {
                 return date.date
             }
         }

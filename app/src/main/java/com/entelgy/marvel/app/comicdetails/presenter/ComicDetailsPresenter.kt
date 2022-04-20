@@ -5,14 +5,14 @@ import com.entelgy.marvel.app.callbacks.*
 import com.entelgy.marvel.app.comicdetails.ComicDetailsView
 import com.entelgy.marvel.app.utils.base.Presenter
 
-interface ComicDetailsPresenter: Presenter<ComicDetailsView>, CharactersCallback, SeriesCallback,
+interface ComicDetailsPresenter: Presenter<ComicDetailsView>, CharactersCallback, ComicsCallback,
     EventCallback, StoriesCallback, UrlCallback {
 
     fun getData(intent: Intent?)
 
-    fun showComics()
+    fun showCoverImageDetail()
 
-    fun showSeries()
+    fun showCharacters()
 
     fun showStories()
 
@@ -22,5 +22,5 @@ interface ComicDetailsPresenter: Presenter<ComicDetailsView>, CharactersCallback
 
     fun showVariants()
 
-    fun showImages()
+    fun showPromotionalImages()
 }

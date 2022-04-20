@@ -1,7 +1,6 @@
 package com.entelgy.marvel.app.characterslist.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.entelgy.marvel.R
 import com.entelgy.marvel.app.callbacks.CharactersCallback
 import com.entelgy.marvel.app.callbacks.OnBottomReachedListener
-import com.entelgy.marvel.app.utils.Utils
+import com.entelgy.marvel.app.utils.AppUtils
 import com.entelgy.marvel.data.model.imageformats.PortraitImage
 import com.entelgy.marvel.data.model.characters.Character
 import com.entelgy.marvel.databinding.ItemCharacterBinding
@@ -25,7 +24,7 @@ class CharactersAdapter(private val context: Context, characters: List<Character
 
     private val charactersList = ArrayList(characters)
 
-    private val picasso = Utils.getPicasso(context)
+    private val picasso = AppUtils.getPicasso(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         val view = inflater.inflate(R.layout.item_character, parent, false)

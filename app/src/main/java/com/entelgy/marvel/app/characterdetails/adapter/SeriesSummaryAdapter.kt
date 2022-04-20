@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.entelgy.marvel.R
 import com.entelgy.marvel.app.callbacks.SeriesCallback
 import com.entelgy.marvel.app.characterdetails.adapter.viewholder.MoreItemsHolder
-import com.entelgy.marvel.app.utils.Utils
+import com.entelgy.marvel.app.utils.AppUtils
 import com.entelgy.marvel.data.model.SeriesSummary
 import com.entelgy.marvel.data.utils.Constants
 import com.entelgy.marvel.databinding.ItemSummaryBinding
@@ -56,7 +56,7 @@ class SeriesSummaryAdapter(context: Context, private val series: List<SeriesSumm
     }
 
     override fun getItemCount(): Int {
-        return Utils.getItemCount(series, totalSeries)
+        return AppUtils.getItemCount(series, totalSeries)
     }
 
     override fun getItemViewType(position: Int): Int {

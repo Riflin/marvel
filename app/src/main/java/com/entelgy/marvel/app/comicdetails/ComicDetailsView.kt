@@ -15,17 +15,23 @@ interface ComicDetailsView: BaseView {
 
     fun showImage(path: String)
 
-    fun showPublishedDate(date: Date)
+    fun showPublishedDate(date: Date?)
 
-    fun showAuthors(vararg author: String)
+    fun showAuthors(authors: List<CreatorSummary>)
 
-    fun showPencillers(vararg penciller: String)
+    fun showPencillers(pencillers: List<CreatorSummary>)
 
     fun showDescription(description: String?)
 
     fun showImagesAvailable(show: Boolean = true)
 
+    fun showNumberOfImagesAvailable(number: Int)
+
     fun showVariantsAvailable(show: Boolean = true)
+
+    fun showNumberOfVariantsAvailable(number: Int)
+
+    fun showSeries(serie: SeriesSummary?)
 
     fun showCollections(collections: List<ComicSummary>)
 
@@ -35,9 +41,9 @@ interface ComicDetailsView: BaseView {
 
     fun showFormat(format: String?)
 
-    fun showPageCount(pageCount: Int)
+    fun showPageCount(pageCount: Int?)
 
-    fun showPrice(vararg price: ComicPrice)
+    fun showPrice(prices: List<ComicPrice>)
 
     fun showUPC(upc: String?)
 
@@ -49,7 +55,11 @@ interface ComicDetailsView: BaseView {
 
     fun showDiamondCode(code: String?)
 
-    fun showDates(dates: List<ComicDate>)
+    fun showFOCDate(date: Date?)
+
+    fun showUnlimitedDate(date: Date?)
+
+    fun showDigitalPurchaseDate(date: Date?)
 
     fun showInkers(inkers: List<CreatorSummary>)
 
@@ -75,16 +85,15 @@ interface ComicDetailsView: BaseView {
 
     fun showNoCoverInfo(show: Boolean = true)
 
-    fun showNumberOfItems(characters: Int, series: Int, events: Int, stories: Int)
+    fun showNumberOfItems(characters: Int, events: Int, stories: Int)
 
     fun onComicNotFound()
 
     fun showCopyright(copyright: String)
 
     fun showCharacters(characters: CharacterList?)
-    fun showSeries(series: SeriesList?)
     fun showStories(stories: StoryList?)
     fun showEvents(events: EventList?)
     fun showUrls(urls: ArrayList<Url>?)
-    fun openUrl(url: Url)
+    fun onErrorParsingData(message: String)
 }

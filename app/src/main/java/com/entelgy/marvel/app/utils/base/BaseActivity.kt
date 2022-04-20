@@ -1,12 +1,11 @@
 package com.entelgy.marvel.app.utils.base
 
-import android.app.Activity
 import android.content.Context
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentManager
 import com.entelgy.marvel.R
-import com.entelgy.marvel.app.utils.Utils
+import com.entelgy.marvel.app.utils.AppUtils
 
 abstract class BaseActivity: AppCompatActivity(), BaseView {
 
@@ -23,6 +22,13 @@ abstract class BaseActivity: AppCompatActivity(), BaseView {
         attachListenersToTheViews()
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+        }
+        return true
+    }
+
     abstract fun init()
 
     abstract fun initViews()
@@ -30,6 +36,11 @@ abstract class BaseActivity: AppCompatActivity(), BaseView {
     abstract fun attachListenersToTheViews()
 
     override fun showError(message: String) {
-        Utils.showDialogInformacion(supportFragmentManager, getString(R.string.error), message)
+        AppUtils.showDialogInformacion(supportFragmentManager, getString(R.string.error), message)
+    }
+
+    override fun onDataError() {
+        AppUtils.showDialogInformacion(supportFragmentManager, getString(R.string.error),
+            getString(R.string.error_obteniendo_datos)) { finish() }
     }
 }

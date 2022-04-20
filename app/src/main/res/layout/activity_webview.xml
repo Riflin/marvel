@@ -8,6 +8,7 @@
         android:id="@+id/appBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:theme="@style/Theme.Marvel.AppBarOverlay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -19,7 +20,7 @@
             android:background="?attr/colorPrimary"
             android:fitsSystemWindows="true"
             app:title="@string/navegador"
-            app:popupTheme="@style/Theme.Marvel.AppBarOverlay" />
+            app:popupTheme="@style/Theme.Marvel.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

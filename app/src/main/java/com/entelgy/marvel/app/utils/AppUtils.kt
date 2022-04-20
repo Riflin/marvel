@@ -9,7 +9,7 @@ import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
 import okhttp3.OkHttpClient
 
-object Utils {
+object AppUtils {
 
     fun showDialogInformacion(
         fragmentManager: FragmentManager,
@@ -54,7 +54,7 @@ object Utils {
     fun getItemCount(list: List<*>, totalItems: Int): Int {
         return when  {
             list.isEmpty() -> 0
-            list.size < totalItems -> list.size + 1
+            totalItems > 0 -> list.size + 1
             else -> list.size
         }
     }

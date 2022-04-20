@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.entelgy.marvel.R
 import com.entelgy.marvel.app.callbacks.StoriesCallback
 import com.entelgy.marvel.app.characterdetails.adapter.viewholder.MoreItemsHolder
-import com.entelgy.marvel.app.utils.Utils
+import com.entelgy.marvel.app.utils.AppUtils
 import com.entelgy.marvel.data.model.StorySummary
 import com.entelgy.marvel.data.utils.Constants
 import com.entelgy.marvel.databinding.ItemSummaryBinding
@@ -22,7 +22,7 @@ class StorySummaryAdapter(context: Context, private val stories: List<StorySumma
         return when (viewType) {
             Constants.TYPE_ITEM -> {
                 val view = inflater.inflate(R.layout.item_summary, parent, false)
-                ComicHolder(view)
+                StoryHolder(view)
             }
             Constants.TYPE_MORE_ITEMS -> {
                 val view = inflater.inflate(R.layout.layout_more_items_available, parent,  false)
@@ -30,7 +30,7 @@ class StorySummaryAdapter(context: Context, private val stories: List<StorySumma
             }
             else -> {
                 val view = inflater.inflate(R.layout.item_summary, parent, false)
-                ComicHolder(view)
+                StoryHolder(view)
             }
         }
 
@@ -38,15 +38,15 @@ class StorySummaryAdapter(context: Context, private val stories: List<StorySumma
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is ComicHolder -> {
+            is StoryHolder -> {
                 if (position % 2 == 0) {
                     holder.itemView.setBackgroundResource(R.drawable.item_character_background)
                 } else {
                     holder.itemView.setBackgroundResource(R.drawable.item_character_blue_background)
                 }
-                val comic = stories[position]
+                val story = stories[position]
 
-                holder.bind(comic)
+                holder.bind(story)
             }
             is MoreItemsHolder -> {
                 holder.bind(totalStories)
@@ -55,7 +55,7 @@ class StorySummaryAdapter(context: Context, private val stories: List<StorySumma
     }
 
     override fun getItemCount(): Int {
-        return Utils.getItemCount(stories, totalStories)
+        return AppUtils.getItemCount(stories, totalStories)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -65,13 +65,13 @@ class StorySummaryAdapter(context: Context, private val stories: List<StorySumma
         }
     }
 
-    inner class ComicHolder(view: View): RecyclerView.ViewHolder(view) {
+    inner class StoryHolder(view: View): RecyclerView.ViewHolder(view) {
         private val binding = ItemSummaryBinding.bind(view)
 
-        fun bind(comic: StorySummary) {
-            binding.tvName.text = comic.name
+        fun bind(story: StorySummary) {
+            binding.tvName.text = story.name
 
-            binding.root.setOnClickListener { callback.onStorySelected(comic) }
+            binding.root.setOnClickListener { callback.onStorySelected(story) }
         }
     }
 }

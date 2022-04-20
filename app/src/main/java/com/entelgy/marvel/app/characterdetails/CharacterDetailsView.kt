@@ -24,5 +24,4 @@ interface CharacterDetailsView: BaseView {
     fun showStories(stories: StoryList?)
     fun showEvents(events: EventList?)
     fun showUrls(urls: ArrayList<Url>?)
-    fun openUrl(url: Url)
 }

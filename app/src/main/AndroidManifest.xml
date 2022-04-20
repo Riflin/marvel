@@ -49,6 +49,20 @@
             android:configChanges="orientation"
             android:screenOrientation="fullSensor"
             android:label="@string/photo_detail"/>
+        <activity
+            android:name=".app.comicdetails.ComicDetailsActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Marvel.NoActionBar"
+            tools:ignore="LockedOrientationActivity"
+            android:label="@string/comic_detail"/>
+        <activity
+            android:name=".app.photolist.PhotoListActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Marvel.NoActionBar"
+            tools:ignore="LockedOrientationActivity"
+            android:label="@string/image_list"/>
     </application>
 
 </manifest>

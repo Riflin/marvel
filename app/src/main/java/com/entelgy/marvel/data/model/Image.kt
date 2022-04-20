@@ -43,6 +43,10 @@ data class Image(
         return "Image(path=$path, extension=$extension)"
     }
 
+    fun getRealPath(): String {
+        return "$path.$extension"
+    }
+
     companion object CREATOR : Parcelable.Creator<Image> {
         override fun createFromParcel(parcel: Parcel): Image {
             return Image(parcel)

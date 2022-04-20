@@ -1,25 +1,39 @@
 package com.entelgy.marvel.data.utils
 
-import android.content.Context
-import com.entelgy.marvel.data.services.ServiceFactory
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.squareup.picasso.OkHttp3Downloader
-import com.squareup.picasso.Picasso
-import okhttp3.OkHttpClient
+import com.google.gson.*
+import java.lang.reflect.Type
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
-object Utils {
+
+object DataUtils {
 
     /**
      * Crea un Gson preparado para transformar las fechas devueltas por el servidor
      */
     fun getGson(): Gson {
         val builder = GsonBuilder()
-        builder.setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+        builder.registerTypeAdapter(Date::class.java, DateDeserializer())
 
         return builder.create()
+    }
+
+    private class DateDeserializer() : JsonDeserializer<Date?> {
+
+        override fun deserialize(
+            jsonElement: JsonElement, typeOF: Type?,
+            context: JsonDeserializationContext?
+        ): Date? {
+            val format = "+yyyy-MM-dd'T'HH:mm:ssZ"
+            try {
+                return SimpleDateFormat(format, Locale.getDefault()).parse(jsonElement.asString)
+            } catch (_: ParseException) {
+            }
+            return Date()
+        }
     }
 
     /**

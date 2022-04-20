@@ -10,17 +10,18 @@ import com.entelgy.marvel.R
 import com.entelgy.marvel.app.characterdetails.adapter.*
 import com.entelgy.marvel.app.characterdetails.presenter.CharacterDetailsPresenter
 import com.entelgy.marvel.app.presenter.PresenterFactory
-import com.entelgy.marvel.app.utils.Utils
+import com.entelgy.marvel.app.utils.AppUtils
 import com.entelgy.marvel.app.utils.base.BaseActivity
-import com.entelgy.marvel.app.webview.WebActivity
-import com.entelgy.marvel.data.model.*
+import com.entelgy.marvel.data.model.EventList
+import com.entelgy.marvel.data.model.SeriesList
+import com.entelgy.marvel.data.model.StoryList
+import com.entelgy.marvel.data.model.Url
 import com.entelgy.marvel.data.model.characters.Character
 import com.entelgy.marvel.data.model.characters.ComicList
 import com.entelgy.marvel.data.utils.Constants
 import com.entelgy.marvel.databinding.ActivityCharacterDetailsBinding
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import java.util.ArrayList
 
 class CharacterDetailsActivity : BaseActivity(), CharacterDetailsView {
 
@@ -50,7 +51,7 @@ class CharacterDetailsActivity : BaseActivity(), CharacterDetailsView {
         binding = ActivityCharacterDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(findViewById(R.id.toolbar))
+        setSupportActionBar(binding.toolbar)
 
         presenter.getData(intent)
     }
@@ -102,8 +103,7 @@ class CharacterDetailsActivity : BaseActivity(), CharacterDetailsView {
     }
 
     override fun showName(name: String) {
-        supportActionBar?.title = name
-        title = name
+        binding.tvTitle.text = name
     }
 
     override fun showBio(bio: String?) {
@@ -117,14 +117,9 @@ class CharacterDetailsActivity : BaseActivity(), CharacterDetailsView {
         binding.tvStories.text = getString(R.string.number_of_stories, stories)
     }
 
-    override fun onDataError() {
-        Utils.showDialogInformacion(supportFragmentManager, getString(R.string.error),
-            getString(R.string.error_obteniendo_datos))
-    }
-
     override fun onCharacterNotFound() {
-        Utils.showDialogInformacion(supportFragmentManager, getString(R.string.error),
-            getString(R.string.character_not_found))
+        AppUtils.showDialogInformacion(supportFragmentManager, getString(R.string.error),
+            getString(R.string.character_not_found)) { finish() }
     }
 
     override fun showLoading(show: Boolean) {
@@ -233,9 +228,5 @@ class CharacterDetailsActivity : BaseActivity(), CharacterDetailsView {
             val adapter = UrlAdapter(this, urls, presenter)
             binding.rvUrls.adapter = adapter
         }
-    }
-
-    override fun openUrl(url: Url) {
-        startActivity(WebActivity.createNewIntent(this, url))
     }
 }

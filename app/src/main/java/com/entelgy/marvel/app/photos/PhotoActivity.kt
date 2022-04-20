@@ -8,7 +8,7 @@ import android.view.View
 import com.entelgy.marvel.R
 import com.entelgy.marvel.app.photos.presenter.PhotoPresenter
 import com.entelgy.marvel.app.presenter.PresenterFactory
-import com.entelgy.marvel.app.utils.Utils
+import com.entelgy.marvel.app.utils.AppUtils
 import com.entelgy.marvel.app.utils.base.BaseActivity
 import com.entelgy.marvel.data.utils.Constants
 import com.entelgy.marvel.databinding.ActivityPhotoBinding
@@ -54,7 +54,7 @@ class PhotoActivity: BaseActivity(), PhotoView {
     }
 
     override fun onDataError() {
-        Utils.showDialogInformacion(supportFragmentManager, getString(R.string.error),
+        AppUtils.showDialogInformacion(supportFragmentManager, getString(R.string.error),
             getString(R.string.error_obteniendo_datos)) {
             finish()
         }

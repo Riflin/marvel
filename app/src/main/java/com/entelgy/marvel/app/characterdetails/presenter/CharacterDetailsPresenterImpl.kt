@@ -3,7 +3,9 @@ package com.entelgy.marvel.app.characterdetails.presenter
 import android.content.Intent
 import android.widget.Toast
 import com.entelgy.marvel.app.characterdetails.CharacterDetailsView
+import com.entelgy.marvel.app.comicdetails.ComicDetailsActivity
 import com.entelgy.marvel.app.photos.PhotoActivity
+import com.entelgy.marvel.app.routing.Routing
 import com.entelgy.marvel.data.model.*
 import com.entelgy.marvel.data.model.characters.Character
 import com.entelgy.marvel.data.model.characters.CharacterDataWrapper
@@ -155,12 +157,22 @@ class CharacterDetailsPresenterImpl : CharacterDetailsPresenter, CoroutineScope 
 
     override fun showPhotoDetail() {
         character?.let { character ->
-            view?.context?.startActivity(PhotoActivity.createNewIntent(view!!.context, character.getThumbnailPath(FullSizeImage())))
+            view?.context?.let { context ->
+                Routing.goToPhotoActivity(context, character.getThumbnailPath(FullSizeImage()))
+            }
         }
     }
 
     override fun onComicSelected(comic: ComicSummary) {
-        Toast.makeText(view?.context, "NOT YET IMPLEMENTED", Toast.LENGTH_LONG).show()
+        comic.resourceURI?.let { uri ->
+            //El id del comic está en la última parte de la uri (ej: http://gateway.marvel.com/v1/public/comics/4100)
+            val urlSplit = uri.split("/")
+            val id = urlSplit[urlSplit.size - 1].toInt()
+
+            view?.context?.let { context ->
+                Routing.goToComicDetailsActivity(context, id)
+            }
+        }
     }
 
     override fun onEventSelected(event: EventSummary) {
@@ -192,6 +204,8 @@ class CharacterDetailsPresenterImpl : CharacterDetailsPresenter, CoroutineScope 
     }
 
     override fun onUrlSelected(url: Url) {
-        view?.openUrl(url)
+        view?.context?.let { context ->
+            Routing.goToWebActivity(context, url)
+        }
     }
 }

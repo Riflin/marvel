@@ -13,7 +13,7 @@ import android.view.View
 import android.webkit.*
 import com.entelgy.marvel.R
 import com.entelgy.marvel.app.presenter.PresenterFactory
-import com.entelgy.marvel.app.utils.Utils
+import com.entelgy.marvel.app.utils.AppUtils
 import com.entelgy.marvel.app.utils.base.BaseActivity
 import com.entelgy.marvel.app.webview.presenter.WebPresenter
 import com.entelgy.marvel.data.model.Url
@@ -93,12 +93,12 @@ class WebActivity: BaseActivity(), WebView {
     }
 
     override fun onDataError() {
-        Utils.showDialogInformacion(supportFragmentManager, getString(R.string.error),
+        AppUtils.showDialogInformacion(supportFragmentManager, getString(R.string.error),
             getString(R.string.error_obteniendo_datos)) { finish() }
     }
 
     override fun onUrlInvalid() {
-        Utils.showDialogInformacion(supportFragmentManager, getString(R.string.error),
+        AppUtils.showDialogInformacion(supportFragmentManager, getString(R.string.error),
             getString(R.string.url_invalid)) { finish() }
     }
 

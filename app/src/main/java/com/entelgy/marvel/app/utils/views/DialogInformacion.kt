@@ -72,7 +72,8 @@ class DialogInformacion: DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view: View = inflater.inflate(R.layout.dialog_informacion, container, false)
+        binding = DialogInformacionBinding.inflate(layoutInflater)
+
         if (dialog != null) {
             dialog!!.setCancelable(false)
             dialog!!.setCanceledOnTouchOutside(false)
@@ -89,6 +90,6 @@ class DialogInformacion: DialogFragment() {
         } else {
             binding.tvAceptar.setOnClickListener { dismiss() }
         }
-        return view
+        return binding.root
     }
 }

@@ -61,6 +61,15 @@ data class ComicPrice(
 }
 
 enum class PriceType(val tipo: String, @StringRes val text: Int) {
-    Impreso("printPrice", R.string.precio_impreso), Digital("digitalPurchasePrice", R.string.precio_digital)
+    Impreso("printPrice", R.string.precio_impreso), Digital("digitalPurchasePrice", R.string.precio_digital);
 
+    companion object {
+        fun getPryceTipe(tipo: String?): PriceType? {
+            return when (tipo) {
+                "printPrice" -> Impreso
+                "digitalPurchasePrice" -> Digital
+                else -> null
+            }
+        }
+    }
 }

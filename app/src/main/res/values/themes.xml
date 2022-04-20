@@ -19,9 +19,17 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.Marvel.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.Marvel.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+    </style>
 
-    <style name="Theme.Marvel.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.Marvel.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+    </style>
 
     <style name="MarvelButtonStyle">
         <item name="android:background">@drawable/marvel_button_selector</item>

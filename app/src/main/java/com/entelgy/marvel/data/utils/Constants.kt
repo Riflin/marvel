@@ -17,6 +17,8 @@ object Constants {
 
     const val URL = "url"
 
+    const val IMAGES = "images"
+
     const val TYPE_ITEM = 0
     const val TYPE_MORE_ITEMS = 1
 

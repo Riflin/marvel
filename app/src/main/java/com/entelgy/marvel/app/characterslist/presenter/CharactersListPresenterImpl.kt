@@ -1,10 +1,12 @@
 package com.entelgy.marvel.app.characterslist.presenter
 
 import androidx.fragment.app.DialogFragment
+import com.entelgy.marvel.R
 import com.entelgy.marvel.app.characterdetails.CharacterDetailsActivity
 import com.entelgy.marvel.app.callbacks.NameFilterCallback
 import com.entelgy.marvel.app.characterslist.CharactersListView
 import com.entelgy.marvel.app.characterslist.dialog.DialogFiltroNombre
+import com.entelgy.marvel.app.routing.Routing
 import com.entelgy.marvel.data.model.CharacterSummary
 import com.entelgy.marvel.data.model.utils.Sort
 import com.entelgy.marvel.data.model.characters.Character
@@ -156,27 +158,43 @@ class CharactersListPresenterImpl() : CharactersListPresenter,
             view?.showLoading()
             val sort = getSortParameter()
             try {
-                val result = GetCharactersFromServer(filterName, filterDate, sort).downloadData()
+                /*Si vamos a descargar más personajes de los que ya teníamos, debemos utilizar los datos
+                 * que ya teníamos para usar el offset y no volver a descargar los mismos personajes
+                 * que ya teníamos
+                 */
+                val offset = if (loadMoreCharacters) {
+                    (lastDataFetched?.offset ?: 0).plus(lastDataFetched?.count ?: 0)
+                } else {
+                    0
+                }
+                val result = GetCharactersFromServer(filterName, filterDate, sort, offset).downloadData()
 
+                //Comprobamos que la llamada ha sido correcta
                 if (result.isSuccessful) {
                     view?.showLoading(false)
+                    //Nos queadmos con CharacterDataContainer como último dato obtenido
                     val dataWrapper = result.body()
                     lastDataFetched = dataWrapper?.data
+                    //Comprobamos que tenemos datos de verdad
                     lastDataFetched?.let {
+                        //Mostramos el copyright
                         view?.showCopyright(dataWrapper!!.attributionText)
+                        //Si estamos descargando más personajes, los añadimos
                         if (loadMoreCharacters) {
                             view?.addCharacters(it.results)
                         } else {
+                            //Si no, los mostramos desde 0
                             view?.showCharacters(it.results)
                         }
                     }
                 } else {
+                    //Si ha fallado la llamada, mostramos el error
                     view?.showLoading(false)
-                    view?.showError(result.errorBody()?.string() ?: "Error obteniendo personajes")
+                    view?.showError(result.errorBody()?.string() ?: view?.context?.getString(R.string.error_downloading_characters) ?: "")
                 }
             } catch (e: Exception) {
                 view?.showLoading(false)
-                view?.showError(e.message ?: "Error obteniendo personajes")
+                view?.showError(e.message ?: view?.context?.getString(R.string.error_downloading_characters) ?: "")
             }
         }
     }
@@ -197,12 +215,20 @@ class CharactersListPresenterImpl() : CharactersListPresenter,
     }
 
     override fun getMoreCharacters() {
-        downloadCharacters(loadMoreCharacters = true)
+        //Sólo descargamos más personajes si tenemos algo más que descargar
+        lastDataFetched?.let { lastDataFetched ->
+            if (lastDataFetched.total ?: 0 > lastDataFetched.count ?: 0) {
+                downloadCharacters(loadMoreCharacters = true)
+            }
+        } ?: run {
+            downloadCharacters(loadMoreCharacters = true)
+        }
     }
 
     override fun onCharacterSelected(character: Character) {
-//        view?.context?.startActivity(CharacterDetailsActivity.createNewIntent(view!!.context, character.id ?: 0))
-        view?.context?.startActivity(CharacterDetailsActivity.createNewIntent(view!!.context, character))
+        view?.context?.let { context ->
+            Routing.goToCharacterDetailsActivity(context, character)
+        }
     }
 
     override fun onCharacterSelected(character: CharacterSummary) {
