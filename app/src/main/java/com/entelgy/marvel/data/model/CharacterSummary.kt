@@ -18,6 +18,16 @@ data class CharacterSummary(
         parcel.readString()
     )
 
+    //Obtiene el id del personaje a partir de su resourceUri
+    fun getId(): Int? {
+        resourceURI?.let { uri ->
+            val urlSplit = uri.split("/")
+            return urlSplit[urlSplit.size-1].toInt()
+        } ?: run {
+            return null
+        }
+    }
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(resourceURI)
         parcel.writeString(name)

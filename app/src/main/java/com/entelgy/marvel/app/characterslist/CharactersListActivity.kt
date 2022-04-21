@@ -1,7 +1,5 @@
 package com.entelgy.marvel.app.characterslist
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -18,6 +16,9 @@ import com.entelgy.marvel.databinding.ActivityCharactersListBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Pantalla inicial de la aplicación, donde mostramos una lista con los personajes de Marvel
+ */
 class CharactersListActivity: BaseActivity(), CharactersListView, OnBottomReachedListener {
 
 

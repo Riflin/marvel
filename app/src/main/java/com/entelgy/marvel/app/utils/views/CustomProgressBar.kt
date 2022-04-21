@@ -12,6 +12,9 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import com.entelgy.marvel.R
 
+/**
+ * Clase para tener un progressBar propio
+ */
 class CustomProgressBar(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : LinearLayout(context, attrs, defStyleAttr) {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)

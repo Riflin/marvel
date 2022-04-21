@@ -17,9 +17,15 @@ import com.entelgy.marvel.data.model.characters.ComicSummary
 import com.entelgy.marvel.data.utils.Constants
 import com.entelgy.marvel.databinding.DialogComicVariantsBinding
 
+/**
+ * Diálogo para mostrar las variantes de un comic
+ */
 class ComicVariantsDialogFragment: BaseDialogFragment(), ComicVariantsView {
 
     companion object {
+        /**
+         * Debemos pasar la lista de variantes del cómic para mostrarlas en el adapter
+         */
         fun creanteNewInstance(variants: List<ComicSummary>): ComicVariantsDialogFragment {
             val dialog = ComicVariantsDialogFragment()
             val bundle = Bundle()
@@ -39,17 +45,28 @@ class ComicVariantsDialogFragment: BaseDialogFragment(), ComicVariantsView {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        //Inflamos la ivsta
         binding = DialogComicVariantsBinding.inflate(inflater, container, false)
 
         return binding.root
     }
 
+    /**
+     * Siempre hay que llamar al destroy() del presenter
+     */
+    override fun onDestroyView() {
+        super.onDestroyView()
+        presenter.destroy()
+    }
+
     override fun init() {
+        //Inicializamos el presenter
         presenter = PresenterFactory.getComicVariantsPresenter()
         presenter.view = this
     }
 
     override fun initViews(view: View) {
+        //Mostramos las variantes en una lista vertical normal
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.rvVariants.layoutManager = layoutManager
     }
@@ -59,6 +76,7 @@ class ComicVariantsDialogFragment: BaseDialogFragment(), ComicVariantsView {
     }
 
     override fun showData() {
+        //Comprobamos los datos para mostrarlos
         presenter.getData(arguments)
     }
 
@@ -66,6 +84,9 @@ class ComicVariantsDialogFragment: BaseDialogFragment(), ComicVariantsView {
         AppUtils.showDialogInformacion(parentFragmentManager, getString(R.string.error), message)
     }
 
+    /**
+     * Si falla algo al obtener los datos, cerramos
+     */
     override fun onDataError() {
         AppUtils.showDialogInformacion(parentFragmentManager, getString(R.string.error),
             getString(R.string.error_obteniendo_datos)) { dismissAllowingStateLoss() }
@@ -75,11 +96,17 @@ class ComicVariantsDialogFragment: BaseDialogFragment(), ComicVariantsView {
         return parentFragmentManager
     }
 
+    /**
+     * Mostramos las variantes en el adapter
+     */
     override fun showVariants(variants: List<ComicSummary>) {
         val adapter = ComicSummaryAdapter(requireContext(), variants, 0, presenter)
         binding.rvVariants.adapter = adapter
     }
 
+    /**
+     * Si al seleccionar un cómic no hemos podido obtener su id... error
+     */
     override fun onComicNotSelectable() {
         AppUtils.showDialogInformacion(parentFragmentManager, getString(R.string.error),
             getString(R.string.error_comic_without_id))
@@ -89,6 +116,9 @@ class ComicVariantsDialogFragment: BaseDialogFragment(), ComicVariantsView {
         binding.progressVariants.visibility = if (show) View.VISIBLE else View.GONE
     }
 
+    /**
+     * Se llama viewContext para evitar el same signature con el getContext() del Fragment
+     */
     override val viewContext: Context
         get() = requireContext()
 }

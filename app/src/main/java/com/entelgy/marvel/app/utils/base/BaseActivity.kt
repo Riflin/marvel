@@ -7,6 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.entelgy.marvel.R
 import com.entelgy.marvel.app.utils.AppUtils
 
+/**
+ * Clase base para todas nuestras activities
+ */
 abstract class BaseActivity: AppCompatActivity(), BaseView {
 
     override val viewContext: Context

@@ -13,6 +13,9 @@ import com.entelgy.marvel.data.model.SeriesSummary
 import com.entelgy.marvel.data.utils.Constants
 import com.entelgy.marvel.databinding.ItemSummaryBinding
 
+/**
+ * Adapter para las series. Mismo funcionamiento que los otros
+ */
 class SeriesSummaryAdapter(context: Context, private val series: List<SeriesSummary>, private val totalSeries: Int,
                            private val callback: SeriesCallback): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

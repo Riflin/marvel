@@ -104,7 +104,9 @@ class CharactersByComicPresenterImpl : CharactersListPresenterImpl<CharactersByC
                 } else {
                     0
                 }
-                val result = GetCharactersByComicFromServer(comicID, filterName, filterDate, sort, offset).downloadData()
+                //Obtenemos los personajes que hay en el comic, con los filtros que hayamos elegido
+                val result = GetCharactersByComicFromServer(comicID, filterName, filterDate, sort,
+                    offset).downloadData()
 
                 //Comprobamos que la llamada ha sido correcta
                 if (result.isSuccessful) {

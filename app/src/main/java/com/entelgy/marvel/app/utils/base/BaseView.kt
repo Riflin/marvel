@@ -3,6 +3,7 @@ package com.entelgy.marvel.app.utils.base
 import android.content.Context
 import androidx.fragment.app.FragmentManager
 
+//Interfaz madre para todas las vistas de la aplicación
 interface BaseView {
     fun showLoading(show: Boolean = true)
 

@@ -32,16 +32,25 @@ import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Pantalla para mostrar los detalles de un cómic en concreto
+ */
 class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
 
     companion object {
 
+        /**
+         * Abre la pantalla con un id para descargarse la información
+         */
         fun createNewIntent(context: Context, comicId: Int): Intent {
             return Intent(context, ComicDetailsActivity::class.java).apply {
                 putExtra(Constants.COMIC_ID, comicId)
             }
         }
 
+        /**
+         * Abre la pantalla con un cómic para mostrar los datos directamente
+         */
         fun createNewIntent(context: Context, comic: Comic): Intent {
             return Intent(context, ComicDetailsActivity::class.java).apply {
                 putExtra(Constants.COMIC_ID, comic.id)
@@ -68,27 +77,30 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        presenter.view = this
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         presenter.destroy()
     }
 
+    /**
+     * Inicializamos el presenter
+     */
     override fun init() {
         presenter = PresenterFactory.getComicDetailPresenter()
         presenter.view = this
         presenter.create()
     }
 
+    /**
+     * Inicializamos las vistas
+     */
     override fun initViews() {
+        //ActionBar con la flechita hacia atrás
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        //Tanto las colecciones, como los cómics de la colección, como los items y las urls, en una lista vertical
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.rvCollections.layoutManager = layoutManager
 
@@ -202,18 +214,24 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         return autores
     }
 
+    /**
+     * Dibujantes del cómic
+     */
     override fun showPencillers(pencillers: List<CreatorSummary>) {
+        //Mostramos "dibujante" o "dibujantes" en función del número de autores que tengamos
         binding.tvTextPenciller.text = resources.getQuantityString(R.plurals.penciller, pencillers.size)
         if (pencillers.isNotEmpty()) {
             val pencilers = getCreatorsList(pencillers)
 
-            //Mostramos "autor" o "autores" en función del número de autores que tengamos
             binding.tvPenciller.text = pencilers
         } else {
             binding.tvPenciller.text = getString(R.string.no_author_info)
         }
     }
 
+    /**
+     * Descripción del cómic
+     */
     override fun showDescription(description: String?) {
         //Mostramos que no hay descripción si ésta es nula o una cadena vacía
         val description1 = if (description.isNullOrBlank()) {
@@ -230,6 +248,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         binding.clImages.visibility = if (show) View.VISIBLE else View.GONE
     }
 
+    /**
+     * Número de imágenes promocionales
+     */
     override fun showNumberOfImagesAvailable(number: Int) {
         binding.tvImages.text = getString(R.string.images_available, number)
     }
@@ -239,10 +260,16 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         binding.clVariants.visibility = if (show) View.VISIBLE else View.GONE
     }
 
+    /**
+     * Número de variantes del cómic
+     */
     override fun showNumberOfVariantsAvailable(number: Int) {
         binding.tvVariants.text = getString(R.string.variantes_disponibles, number)
     }
 
+    /**
+     * Mostramos la serie a la que pertenece el cómic (o la ocultamos, si no pertenece a ninguna)
+     */
     override fun showSeries(serie: SeriesSummary?) {
         if (serie != null) {
             binding.clSeries.visibility = View.VISIBLE
@@ -252,6 +279,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Colecciones en las que aparece el cómic
+     */
     override fun showCollections(collections: List<ComicSummary>) {
         if (collections.isNotEmpty()) {
             val adapter = ComicCollectionAdapter(this, collections, presenter)
@@ -262,6 +292,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Cómics pertenecientes a esta colección
+     */
     override fun showCollectedIssues(collectedIssues: List<ComicSummary>) {
         if (collectedIssues.isNotEmpty()) {
             binding.llCollectedIssues.visibility = View.VISIBLE
@@ -272,6 +305,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Número del cómic
+     */
     override fun showNumber(number: Int?) {
         if (number != null) {
             binding.tvNumber.text = number.toString()
@@ -280,6 +316,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Formato del cómic
+     */
     override fun showFormat(format: String?) {
         if (format != null && format.isNotBlank()) {
             binding.tvFormat.text = format
@@ -288,6 +327,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Número de páginas
+     */
     override fun showPageCount(pageCount: Int?) {
         if (pageCount != null) {
             binding.tvPageCount.text = pageCount.toString()
@@ -296,6 +338,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Lista de precios
+     */
     override fun showPrice(prices: List<ComicPrice>) {
         if (prices.isNotEmpty()) {
             binding.clPrice.visibility = View.VISIBLE
@@ -407,6 +452,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Entintadores
+     */
     override fun showInkers(inkers: List<CreatorSummary>) {
         if (inkers.isNotEmpty()) {
             val creators = getCreatorsList(inkers)
@@ -420,6 +468,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Coloristas
+     */
     override fun showColorists(colorists: List<CreatorSummary>) {
         if (colorists.isNotEmpty()) {
             val creators = getCreatorsList(colorists)
@@ -433,6 +484,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Rotulistas
+     */
     override fun showLetterers(letterers: List<CreatorSummary>) {
         if (letterers.isNotEmpty()) {
             val creators = getCreatorsList(letterers)
@@ -446,6 +500,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Pintores
+     */
     override fun showPainters(painters: List<CreatorSummary>) {
         if (painters.isNotEmpty()) {
             val creators = getCreatorsList(painters)
@@ -459,6 +516,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Editores
+     */
     override fun showEditors(editors: List<CreatorSummary>) {
         if (editors.isNotEmpty()) {
             val creators = getCreatorsList(editors)
@@ -473,6 +533,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Dibujantes de la portada
+     */
     override fun showCoverPencilers(pencilers: List<CreatorSummary>) {
         if (pencilers.isNotEmpty()) {
             val creators = getCreatorsList(pencilers)
@@ -487,6 +550,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Entintadore de la portada
+     */
     override fun showCoverInkers(inkers: List<CreatorSummary>) {
         if (inkers.isNotEmpty()) {
             val creators = getCreatorsList(inkers)
@@ -500,6 +566,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Coloristas de la portada
+     */
     override fun showCoverColorists(colorists: List<CreatorSummary>) {
         if (colorists.isNotEmpty()) {
             val creators = getCreatorsList(colorists)
@@ -514,6 +583,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Rotulistas de la portada
+     */
     override fun showCoverLetterers(letterers: List<CreatorSummary>) {
         if (letterers.isNotEmpty()) {
             val creators = getCreatorsList(letterers)
@@ -528,6 +600,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Pintores de la portada
+     */
     override fun showCoverPainters(painters: List<CreatorSummary>) {
         if (painters.isNotEmpty()) {
             val creators = getCreatorsList(painters)
@@ -542,6 +617,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Editores de la portada
+     */
     override fun showCoverEditors(editors: List<CreatorSummary>) {
         if (editors.isNotEmpty()) {
             val creators = getCreatorsList(editors)
@@ -556,6 +634,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Indicamos si tenemos o no información de la portada
+     */
     override fun showNoCoverInfo(show: Boolean) {
         //En función de si tenemos info de la portada o no, mostramos el "no disponible" o los creadores
         if (show) {
@@ -588,6 +669,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         binding.tvCopyright.text = copyright
     }
 
+    /**
+     * Muestra los personajes que salen en el cómic
+     */
     override fun showCharacters(characters: CharacterList?) {
         //Seleccionamos la pestaña de los personajes
         binding.tvCharacters.isSelected = true
@@ -610,6 +694,10 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+
+    /**
+     * Historias a las que pertenece
+     */
     override fun showStories(stories: StoryList?) {
         //Seleccionamos la pestaña de las histoiras
         binding.tvCharacters.isSelected = false
@@ -642,6 +730,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         binding.tvEmptyView.text = emptyText
     }
 
+    /**
+     * Eventos en los que está el cómic
+     */
     override fun showEvents(events: EventList?) {
         //Seleccionamos la pestaña de los eventos
         binding.tvCharacters.isSelected = false

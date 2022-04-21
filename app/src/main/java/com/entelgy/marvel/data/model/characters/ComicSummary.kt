@@ -20,6 +20,9 @@ data class ComicSummary(
         parcel.writeString(name)
     }
 
+    /**
+     * Devuelve el id del cómic a partir de su resourceUri
+     */
     fun getId(): Int? {
         resourceURI?.let { uri ->
             //El id del comic está en la última parte de la uri (ej: http://gateway.marvel.com/v1/public/comics/4100)

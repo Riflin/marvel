@@ -18,8 +18,15 @@ import com.entelgy.marvel.app.photos.presenter.PhotoPresenterImpl
 import com.entelgy.marvel.app.webview.presenter.WebPresenter
 import com.entelgy.marvel.app.webview.presenter.WebPresenterImpl
 
+/**
+ * Aquí inicializamos los presenter. Se ha optado por un formato singleton, creando un sólo objeto
+ * de cada presenter. Me gusta más así por tema de preservar los datos, aunque en esta aplicación
+ * se podría haber inicializado un objeto cada vez que queremos un presenter porque no hay ninguna
+ * navegación compleja ni entre fragments ni nada
+ */
 object PresenterFactory {
 
+    //Lista de todos los presenters de la aplicación
     private var charactersListPresenter: CharactersListPresenter<CharactersListView>? = null
     private var characterDetailsPresenter: CharacterDetailsPresenter? = null
     private var webPresenter: WebPresenter? = null

@@ -17,6 +17,10 @@ import com.entelgy.marvel.data.model.characters.ComicSummary
 import com.entelgy.marvel.data.model.comics.Comic
 import com.entelgy.marvel.data.utils.Constants
 
+/**
+ * Desde aquí controlamos los métodos con los que acceder a cada una de las pantallas de la aplicación.
+ * Cuando queramos acceder a una de ellas, deberíamos llamar aquí directamente
+ */
 object Routing {
 
     fun goToCharacterDetailsActivity(context: Context, characterId: Int, characterName: String) {

@@ -9,6 +9,9 @@ import androidx.fragment.app.DialogFragment
 import com.entelgy.marvel.R
 import com.entelgy.marvel.databinding.DialogInformacionBinding
 
+/**
+ * Diálogo que nos sirve para indicar un mensaje de error o informar de cualquier cosa al usuario
+ */
 class DialogInformacion: DialogFragment() {
 
 

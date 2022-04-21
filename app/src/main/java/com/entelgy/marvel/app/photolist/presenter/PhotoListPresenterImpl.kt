@@ -5,6 +5,9 @@ import com.entelgy.marvel.app.photolist.PhotoListView
 import com.entelgy.marvel.data.model.Image
 import com.entelgy.marvel.data.utils.Constants
 
+/**
+ * Presenter para la lista de imágenes promocionales de un cómic
+ */
 class PhotoListPresenterImpl : PhotoListPresenter {
     override var view: PhotoListView? = null
 

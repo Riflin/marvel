@@ -31,6 +31,10 @@ class CharacterDetailsActivity : BaseActivity(), CharacterDetailsView {
 
     companion object {
 
+        /**
+         * Abrimos la activity con el id y nombre del personaje, para descargarnos la información
+         * desde el servidor
+         */
         fun createNewIntent(context: Context, characterId: Int, characterName: String): Intent {
             return Intent(context, CharacterDetailsActivity::class.java).apply {
                 putExtra(Constants.CHARACTER_ID, characterId)
@@ -38,6 +42,10 @@ class CharacterDetailsActivity : BaseActivity(), CharacterDetailsView {
             }
         }
 
+        /**
+         * Abrimos la activity con los datos completos del personaje, por lo que podemos mostrarlos
+         * sin necesidad de llamar a la api
+         */
         fun createNewIntent(context: Context, character: Character): Intent {
             return Intent(context, CharacterDetailsActivity::class.java).apply {
                 putExtra(Constants.CHARACTER_ID, character.id)
@@ -49,25 +57,33 @@ class CharacterDetailsActivity : BaseActivity(), CharacterDetailsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        //Inflamos la vista
         binding = ActivityCharacterDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
-
+        //Comprobamos los datos que nos llegan en el intent
         presenter.getData(intent)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroy()
+    }
+
     override fun init() {
+        //Inicializamos el presenter
         presenter = PresenterFactory.getCharacterDetailsPresenter()
         presenter.view = this
         presenter.create()
     }
 
     override fun initViews() {
+        //Inicializamos la toolbar para habilitar la flechita hacia atrás
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        //Los layoutManager para mostrar los items (series, comics, etc) del personaje y las urls
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.rvItems.layoutManager = layoutManager
 
@@ -83,37 +99,41 @@ class CharacterDetailsActivity : BaseActivity(), CharacterDetailsView {
         binding.ivProfile.setOnClickListener { presenter.showPhotoDetail() }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            finish()
-        }
-        return true
-    }
-
+    /**
+     * Mostramos la imagen del personaje
+     */
     override fun showImage(path: String) {
         binding.progressImage.visibility = View.VISIBLE
-        Picasso.get().load(path).placeholder(R.drawable.ic_broken_image).into(binding.ivProfile, object: Callback {
+        Picasso.get().load(path).into(binding.ivProfile, object: Callback {
             override fun onSuccess() {
                 binding.progressImage.visibility = View.GONE
             }
 
             override fun onError(e: Exception?) {
+                //Si falla, imagen indicándolo
                 binding.progressImage.visibility = View.GONE
+                binding.ivProfile.setImageResource(R.drawable.ic_broken_image)
             }
         })
     }
 
+    /**
+     * Nombre del personaje
+     */
     override fun showName(name: String) {
-        setSupportActionBar(null)
-        binding.toolbar.title = name
-        setSupportActionBar(binding.toolbar)
         supportActionBar?.title = name
     }
 
+    /**
+     * Descripción del personaje
+     */
     override fun showBio(bio: String?) {
         binding.tvDescription.text = if (bio.isNullOrBlank()) getString(R.string.no_description_available) else bio
     }
 
+    /**
+     * Número de cómics, series, eventos e historias en los que aparece el personaje
+     */
     override fun showNumberOfItems(comics: Int, series: Int, events: Int, stories: Int) {
         binding.tvComics.text = getString(R.string.number_of_comics, comics)
         binding.tvSeries.text = getString(R.string.number_of_series, series)
@@ -121,6 +141,9 @@ class CharacterDetailsActivity : BaseActivity(), CharacterDetailsView {
         binding.tvStories.text = getString(R.string.number_of_stories, stories)
     }
 
+    /**
+     * Si no hemos encontrado el personaje indicado, error y cerramos activity
+     */
     override fun onCharacterNotFound() {
         AppUtils.showDialogInformacion(supportFragmentManager, getString(R.string.error),
             getString(R.string.character_not_found)) { finish() }
@@ -134,14 +157,20 @@ class CharacterDetailsActivity : BaseActivity(), CharacterDetailsView {
         binding.tvCopyright.text = copyright
     }
 
+    /**
+     * Mostramos los comics en los que aparece el personaje
+     */
     override fun showComics(comics: ComicList?) {
+        //Seleccionamos la pestaña de los comics
         binding.tvComics.isSelected = true
         binding.tvEvents.isSelected = false
         binding.tvStories.isSelected = false
         binding.tvSeries.isSelected = false
 
+        //Mostramos los comics en el adapter o el emptyView si no tenemos
         if (comics != null) {
             if (comics.items.isNotEmpty()) {
+                //Comprobamos si hay más cómics de los que tenemos para mostrar
                 val moreComicsAvailable = (comics.available ?: 0).minus(comics.returned ?: 0)
                 val adapter = ComicSummaryAdapter(this, comics.items, moreComicsAvailable, presenter)
                 binding.rvItems.adapter = adapter
@@ -155,7 +184,11 @@ class CharacterDetailsActivity : BaseActivity(), CharacterDetailsView {
         }
     }
 
+    /**
+     * Mostramos las series del personaje
+     */
     override fun showSeries(series: SeriesList?) {
+        //Seleccionamos su pestaña correspondiente
         binding.tvComics.isSelected = false
         binding.tvEvents.isSelected = false
         binding.tvStories.isSelected = false
@@ -176,6 +209,9 @@ class CharacterDetailsActivity : BaseActivity(), CharacterDetailsView {
         }
     }
 
+    /**
+     * Historias del personaje
+     */
     override fun showStories(stories: StoryList?) {
         binding.tvComics.isSelected = false
         binding.tvEvents.isSelected = false
@@ -197,6 +233,9 @@ class CharacterDetailsActivity : BaseActivity(), CharacterDetailsView {
         }
     }
 
+    /**
+     * Muestra los eventos donde aparece el personaje
+     */
     override fun showEvents(events: EventList?) {
         binding.tvComics.isSelected = false
         binding.tvEvents.isSelected = true
@@ -218,12 +257,18 @@ class CharacterDetailsActivity : BaseActivity(), CharacterDetailsView {
         }
     }
 
+    /**
+     * Muestra un emptyView con un texto indicando que no tenemos comics/eventos/historias/series disponibles
+     */
     private fun showEmptyView(emptyText: String) {
         binding.rvItems.visibility = View.GONE
         binding.emptyView.visibility = View.VISIBLE
         binding.tvEmptyView.text = emptyText
     }
 
+    /**
+     * Muestra los enlaces en una lista, o esconde el layout si no tenemos
+     */
     override fun showUrls(urls: ArrayList<Url>?) {
         if (urls.isNullOrEmpty()) {
             binding.clEnlaces.visibility = View.GONE

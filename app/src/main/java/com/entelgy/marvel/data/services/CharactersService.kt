@@ -6,6 +6,9 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
+/**
+ * Definición de las llamadas al servidor concernientes a los personajes y los parámetros a pasar
+ */
 interface CharactersService {
 
     @GET("v1/public/characters")

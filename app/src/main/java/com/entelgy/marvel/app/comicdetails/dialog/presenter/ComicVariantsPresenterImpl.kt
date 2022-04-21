@@ -6,6 +6,9 @@ import com.entelgy.marvel.app.routing.Routing
 import com.entelgy.marvel.data.model.characters.ComicSummary
 import com.entelgy.marvel.data.utils.Constants
 
+/**
+ * Presenter para el diálogo donde mosramos las variantes de un cómic
+ */
 class ComicVariantsPresenterImpl : ComicVariantsPresenter {
     override var view: ComicVariantsView? = null
 
@@ -29,6 +32,9 @@ class ComicVariantsPresenterImpl : ComicVariantsPresenter {
         view = null
     }
 
+    /**
+     * Mostramos los detalles del cómic seleccionado
+     */
     override fun onComicSelected(comic: ComicSummary) {
         view?.viewContext?.let { context ->
             val id = comic.getId()
@@ -49,12 +55,19 @@ class ComicVariantsPresenterImpl : ComicVariantsPresenter {
         //NOTHING HERE
     }
 
+    /**
+     * Comprobamos que hemos recibido bien los datos para abrir el diálogo
+     */
     override fun getData(arguments: Bundle?) {
+        //Tenemos que tener un Bundle
         if (arguments != null) {
+            //Y una lista de variantes (comicSummary)
             val variants: ArrayList<ComicSummary>? = arguments.getParcelableArrayList(Constants.COMIC_VARIANTS)
+            //Si está vacía o es nula, error
             if (variants.isNullOrEmpty()) {
                 view?.onDataError()
             } else {
+                //Si no, pues la mostramos
                 view?.showVariants(variants)
             }
         } else {

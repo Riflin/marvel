@@ -37,6 +37,7 @@ class PhotosPagerAdapter(context: Context, private val images: List<Image>): Pag
 
         val image = images[position]
 
+        //Mostramos la imagen
         binding.progressBar.visibility = View.VISIBLE
         Picasso.get().load(image.getRealPath()).into(binding.ivPhoto, object: Callback {
             override fun onSuccess() {
@@ -49,6 +50,7 @@ class PhotosPagerAdapter(context: Context, private val images: List<Image>): Pag
             }
         })
 
+        //Añadimos la vista al container para que se muestre bien
         container.addView(binding.root)
 
         return binding.root

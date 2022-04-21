@@ -18,8 +18,6 @@ interface ComicDetailsPresenter: Presenter<ComicDetailsView>, CharactersCallback
 
     fun showEvents()
 
-    fun showPhotoDetail()
-
     fun showVariants()
 
     fun showPromotionalImages()

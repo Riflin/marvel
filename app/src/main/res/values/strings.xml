@@ -115,4 +115,5 @@
     <string name="error_comic_without_id">Ocurrió un error al obtener el id del comic seleccionado y no es posible ver sus detalles</string>
     <string name="characters_by_comic">Personajes del cómic</string>
     <string name="personajes_presentes_en_el_comic">Personajes presentes en el cómic %1$s</string>
+    <string name="no_variants_available">No hay variantes disponibles para este cómic</string>
 </resources>

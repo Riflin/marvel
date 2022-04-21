@@ -21,6 +21,10 @@ object DataUtils {
         return builder.create()
     }
 
+    /**
+     * Con este Deserializer parseamos correctamente las fechas, incluidas las que son negativas,
+     * que nos llegan del servidor
+     */
     private class DateDeserializer() : JsonDeserializer<Date?> {
 
         override fun deserialize(

@@ -1,5 +1,8 @@
 package com.entelgy.marvel.data.utils
 
+/**
+ * Constantes necesarias en la aplicación
+ */
 object Constants {
 
     const val PRIVATE_KEY = "1a948866e202b2ffa62b47d1edfd0ae7fd9d033e"
@@ -23,21 +26,6 @@ object Constants {
 
     const val TYPE_ITEM = 0
     const val TYPE_MORE_ITEMS = 1
-
-    const val WRITER = "writer"
-    const val PENCILLER = "penciller"
-    const val PENCILER = "penciler"
-    const val PENCILLER_COVER = "penciller (cover)"
-    const val PENCILER_COVER = "penciler (cover)"
-    const val LETTERER = "letterer"
-    const val INKER = "inker"
-    const val INKER_COVER = "inker (cover)"
-    const val COLORIST = "colorist"
-    const val COLORIST_COVER = "colorist (cover)"
-    const val EDITOR = "editor"
-    const val EDITOR_COVER = "editor (cover)"
-    const val PAINTER = "painter"
-    const val PAINTER_COVER = "painter (cover)"
 
     const val PUBLICATION_DATE = "onsaleDate"
     const val FINAL_ORDERDER_CUTOFF_DATE = "focDate"

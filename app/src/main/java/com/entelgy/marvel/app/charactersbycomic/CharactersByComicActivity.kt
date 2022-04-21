@@ -19,9 +19,16 @@ import com.entelgy.marvel.databinding.ActivityCharactersInComicBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Pantalla para mostrar los personajes que aparecen en un cómic.
+ * Es igual que la CharactersListActivity pero poniendo arriba el nombre del cómic
+ */
 class CharactersByComicActivity: BaseActivity(), CharactersByComicView, OnBottomReachedListener {
 
     companion object {
+        /**
+         * Debemos indicar el id y el nombre del comic cuyos personajes vamos a mostrar
+         */
         fun createNewIntent(context: Context, comicID: Int, comicName: String): Intent {
             return Intent(context, CharactersByComicActivity::class.java).apply {
                 putExtra(Constants.COMIC_ID, comicID)
@@ -39,29 +46,37 @@ class CharactersByComicActivity: BaseActivity(), CharactersByComicView, OnBottom
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        //Inflamos la vista
         binding = ActivityCharactersInComicBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
 
+        //Comprobamos los datos del intent
         presenter.getData(intent)
     }
 
+    /**
+     * Siempre hay que llamar al destroy() del presenter
+     */
     override fun onDestroy() {
         super.onDestroy()
         presenter.destroy()
     }
 
     override fun init() {
+        //Inicializamos el presenter
         presenter = PresenterFactory.getCharactersByComicPresenter()
         presenter.view = this
         presenter.create()
     }
 
     override fun initViews() {
+        //Inicializamos el actionBar para habilitar la flechita hacia atrás
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        //Colores de los swipeToRefresh
         binding.swRefresh.setColorSchemeColors(
             ContextCompat.getColor(this, R.color.colorPrimary),
             ContextCompat.getColor(this, R.color.colorPrimaryDark), ContextCompat.getColor(this, R.color.dark_green),
@@ -71,10 +86,14 @@ class CharactersByComicActivity: BaseActivity(), CharactersByComicView, OnBottom
             ContextCompat.getColor(this, R.color.colorPrimaryDark), ContextCompat.getColor(this, R.color.dark_green),
             ContextCompat.getColor(this, R.color.purple_200), ContextCompat.getColor(this, R.color.green))
 
+        //Mostraremos los personajes en un gridLayout de dos columnas
         val layoutManager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
         binding.rvCharacters.layoutManager = layoutManager
     }
 
+    /**
+     * Mismos listeners que en CharactersListActivity
+     */
     override fun attachListenersToTheViews() {
         binding.tvFiltroNombre.setOnClickListener { presenter.selectNameFilter() }
         binding.tvFiltroFecha.setOnClickListener { presenter.selectDateFilter() }
@@ -107,12 +126,16 @@ class CharactersByComicActivity: BaseActivity(), CharactersByComicView, OnBottom
         }
     }
 
+    /**
+     * Nombre del cómic del que estamos viendo los personajes
+     */
     override fun showComicName(name: String) {
         binding.tvTitle.text = getString(R.string.personajes_presentes_en_el_comic, name)
     }
 
     override fun showLoading(show: Boolean) {
         binding.swRefresh.isRefreshing = show
+        binding.swEmptyRefresh.isRefreshing = show
     }
 
     override fun onFilterNameSelected(filter: String) {
@@ -156,6 +179,9 @@ class CharactersByComicActivity: BaseActivity(), CharactersByComicView, OnBottom
         binding.ivBorrarFecha.visibility = if (show) View.VISIBLE else View.GONE
     }
 
+    /**
+     * Mostramos la ordenación por nombre elegida
+     */
     override fun onSortNameSelected(sort: Sort) {
         when (sort) {
             Sort.Ascending -> {
@@ -172,6 +198,9 @@ class CharactersByComicActivity: BaseActivity(), CharactersByComicView, OnBottom
         binding.ivBorrarSortName.visibility = if (show) View.VISIBLE else View.GONE
     }
 
+    /**
+     * Mostramos la ordenación por fecha elegida
+     */
     override fun onSortDateSelected(sort: Sort) {
         when (sort) {
             Sort.Ascending -> {
@@ -188,24 +217,39 @@ class CharactersByComicActivity: BaseActivity(), CharactersByComicView, OnBottom
         binding.ivBorrarSortDate.visibility = if (show) View.VISIBLE else View.GONE
     }
 
+    /**
+     * Reseteamos la ordenación por nombre
+     */
     override fun resetSortName() {
         binding.tvSortName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0,0,0)
         binding.tvSortName.isSelected = false
     }
 
+    /**
+     * Reseteamos la ordenación por fecha
+     */
     override fun resetSortDate() {
         binding.tvSortDate.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0,0,0)
         binding.tvSortDate.isSelected = false
     }
 
+    /**
+     * Ordenamos la lista por nombre
+     */
     override fun sortByName(sortName: Sort) {
         adapter?.sortByName(sortName)
     }
 
+    /**
+     * Ordenamos la lista por fecha
+     */
     override fun sortByDate(sortName: Sort) {
         adapter?.sortByDate(sortName)
     }
 
+    /**
+     * Mostramos los personajes obtenidos, o el emptyView si no tenemos ninguno
+     */
     override fun showCharacters(characters: List<Character>) {
         if (characters.isNotEmpty()) {
             adapter = CharactersAdapter(this, characters, presenter, this)
@@ -218,10 +262,16 @@ class CharactersByComicActivity: BaseActivity(), CharactersByComicView, OnBottom
         }
     }
 
+    /**
+     * Añadimos nuevos personajes a la vista
+     */
     override fun addCharacters(characters: List<Character>) {
         adapter?.addCharacters(characters)
     }
 
+    /**
+     * Actualizamos los datos al llegar al final de la lista
+     */
     override fun onBottomReached() {
         presenter.getMoreCharacters()
     }

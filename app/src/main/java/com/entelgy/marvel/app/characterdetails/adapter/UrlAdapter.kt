@@ -13,6 +13,10 @@ import com.entelgy.marvel.data.model.Url
 import com.entelgy.marvel.databinding.ItemUrlBinding
 
 
+/**
+ * Adapter para mostrar los enlaces. En este caso simplemente mostramos los enlaces y llamamos
+ * al callback para mostrar la url
+ */
 class UrlAdapter(context: Context, private val urls: List<Url>,
                  private val callback: UrlCallback): RecyclerView.Adapter<UrlAdapter.UrlHolder>() {
 

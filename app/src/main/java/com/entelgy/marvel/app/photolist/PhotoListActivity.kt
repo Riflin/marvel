@@ -13,9 +13,15 @@ import com.entelgy.marvel.data.model.Image
 import com.entelgy.marvel.data.utils.Constants
 import com.entelgy.marvel.databinding.ActivityPhotoListBinding
 
+/**
+ * Pantalla para mostrar la lista de imágenes promocionales de un cómic
+ */
 class PhotoListActivity: BaseActivity(), PhotoListView {
 
     companion object {
+        /**
+         * Debemos pasarle el listado de imágenes a mostrar
+         */
         fun createNewIntent(context: Context, images: List<Image>): Intent {
             return Intent(context, PhotoListActivity::class.java).apply {
                 putExtra(Constants.IMAGES, ArrayList(images))
@@ -53,6 +59,7 @@ class PhotoListActivity: BaseActivity(), PhotoListView {
     }
 
     override fun initViews() {
+        //Flechita hacia atrás habilitada
         setSupportActionBar(binding.toolbar)
         binding.toolbar.title = getString(R.string.image_list)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -77,6 +84,9 @@ class PhotoListActivity: BaseActivity(), PhotoListView {
         })
     }
 
+    /**
+     * Muestra el número de imagen que estamos viendo y cuántas tenemos en total
+     */
     private fun setFotoIndex(position: Int) {
         binding.tvNumber.text = getString(R.string.photo_index, position, totalFotos)
     }

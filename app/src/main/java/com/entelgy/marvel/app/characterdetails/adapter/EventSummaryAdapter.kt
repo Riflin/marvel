@@ -13,6 +13,9 @@ import com.entelgy.marvel.data.model.EventSummary
 import com.entelgy.marvel.data.utils.Constants
 import com.entelgy.marvel.databinding.ItemSummaryBinding
 
+/**
+ * Adapter para mostrar los eventos de un personaje. Funciona igual que el de los comics
+ */
 class EventSummaryAdapter(context: Context, private val events: List<EventSummary>, private val totalEvents: Int,
                           private val callback: EventCallback): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

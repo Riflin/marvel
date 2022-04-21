@@ -8,6 +8,9 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Caso de uso para obtener los personajes de un cómic en particular
+ */
 class GetCharactersByComicFromServer(private val comicID: Int, private val name: String?, private val fecha: Date?,
                                      private val orderBy: String?, private val offset: Int? = 0): NetworkUseCase<CharacterDataWrapper>() {
     override suspend fun downloadData(): Response<CharacterDataWrapper> {

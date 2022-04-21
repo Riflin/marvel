@@ -6,6 +6,9 @@ import com.entelgy.marvel.data.services.ServiceFactory
 import com.entelgy.marvel.domain.NetworkUseCase
 import retrofit2.Response
 
+/**
+ * Caso de uso con el que obtenemos los detalles de un personaje
+ */
 class GetCharacterDetails(private val characterId: Int): NetworkUseCase<CharacterDataWrapper>() {
     override suspend fun downloadData(): Response<CharacterDataWrapper> {
         return CharactersNetworkProvider(ServiceFactory.getCharactersService()).getCharacterDetail(characterId)

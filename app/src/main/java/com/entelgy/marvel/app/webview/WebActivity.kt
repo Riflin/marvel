@@ -20,9 +20,16 @@ import com.entelgy.marvel.data.model.Url
 import com.entelgy.marvel.data.utils.Constants
 import com.entelgy.marvel.databinding.ActivityWebviewBinding
 
+/**
+ * Activity con un webView para navegar por los enlaces de la aplicación sin tener que abrir
+ * un navegador externo
+ */
 class WebActivity: BaseActivity(), WebView {
 
     companion object {
+        /**
+         * Debemos pasar la url a la que navegar
+         */
         fun createNewIntent(context: Context, url: Url): Intent {
             return Intent(context, WebActivity::class.java).apply {
                 putExtra(Constants.URL, url)
@@ -62,6 +69,7 @@ class WebActivity: BaseActivity(), WebView {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        //Ajustes del webView
         binding.webView.settings.domStorageEnabled = true
         binding.webView.webViewClient = MarvelWebViewClient()
         binding.webView.webChromeClient = MarvelWebChromeClient()
@@ -70,14 +78,8 @@ class WebActivity: BaseActivity(), WebView {
         binding.webView.settings.javaScriptEnabled = true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            finish()
-        }
-        return true
-    }
-
     override fun attachListenersToTheViews() {
+        //Si falla la carga, se muestra este botón con el que podemos reintentarla
         binding.tvRetry.setOnClickListener { presenter.getData(intent) }
     }
 
@@ -88,15 +90,24 @@ class WebActivity: BaseActivity(), WebView {
         }
     }
 
+    /**
+     * Cargamos la url en el webview
+     */
     override fun showWebpage(url: String) {
         binding.webView.loadUrl(url)
     }
 
+    /**
+     * Si la url no es válida, chapamos
+     */
     override fun onUrlInvalid() {
         AppUtils.showDialogInformacion(supportFragmentManager, getString(R.string.error),
             getString(R.string.url_invalid)) { finish() }
     }
 
+    /**
+     * WebViewClient personalizado
+     */
     private inner class MarvelWebViewClient: WebViewClient() {
         override fun onPageStarted(view: android.webkit.WebView?, url: String?, favicon: Bitmap?) {
             super.onPageStarted(view, url, favicon)
@@ -150,6 +161,10 @@ class WebActivity: BaseActivity(), WebView {
         }
     }
 
+    /**
+     * WebChromeClient personalizado para mostrar un progress "chulo" en el que se va rellenando
+     * el logo de marvel conforme vamos cargando la página
+     */
     private inner class MarvelWebChromeClient: WebChromeClient() {
         override fun onProgressChanged(view: android.webkit.WebView?, newProgress: Int) {
             Log.i("WEBVIEW", "PROGRESS: $newProgress")

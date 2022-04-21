@@ -13,6 +13,11 @@ import com.entelgy.marvel.app.callbacks.ComicsCallback
 import com.entelgy.marvel.data.model.characters.ComicSummary
 import com.entelgy.marvel.databinding.ItemSummaryBinding
 
+/**
+ * Adapter para mostrar tanto las colecciones en las que aparece este cómic como los cómics contenidos
+ * en la colección seleccionada. Tanto uno como otro son objetos ComicSummary que mostramos aquí. En este
+ * caso, no se muestra al final un campo indicando que hay X cómics más
+ */
 class ComicCollectionAdapter(private val context: Context, private val comics: List<ComicSummary>,
                              private val callback: ComicsCallback): RecyclerView.Adapter<ComicCollectionAdapter.ComicHolder>() {
 
@@ -32,6 +37,11 @@ class ComicCollectionAdapter(private val context: Context, private val comics: L
         return comics.size
     }
 
+    /**
+     * Aunque el nombre es igual que el viewHolder del ComicSummaryAdapter, y se llama al mismo
+     * callback al seleccionarlo, lo mostramos ligeramente diferente. Se podría generalizar en un
+     * único viewHolder
+     */
     inner class ComicHolder(view: View): RecyclerView.ViewHolder(view) {
         private val binding = ItemSummaryBinding.bind(view)
 

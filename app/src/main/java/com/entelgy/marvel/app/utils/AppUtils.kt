@@ -11,7 +11,7 @@ import okhttp3.OkHttpClient
 
 object AppUtils {
 
-    fun showDialogInformacion(
+    private fun showDialogInformacion(
         fragmentManager: FragmentManager,
         title: String?,
         text: String?,
@@ -22,6 +22,9 @@ object AppUtils {
         dialogInformacion.show(fragmentManager, "Info")
     }
 
+    /**
+     * Muestra un diálogo informando de algo. Se puede indicar lo que hacer al darle al botón de aceptar
+     */
     fun showDialogInformacion(
         fragmentManager: FragmentManager,
         title: String?,
@@ -33,6 +36,9 @@ object AppUtils {
         dialogInformacion.show(fragmentManager, "Info")
     }
 
+    /**
+     * Muestra un diálogo informando de algo. Se puede indicar lo que hacer al darle al botón de aceptar
+     */
     fun showDialogInformacion(fragmentManager: FragmentManager, title: String?, text: String?) {
         showDialogInformacion(fragmentManager, title, text, null)
     }
@@ -43,8 +49,11 @@ object AppUtils {
      */
     fun getItemCount(list: List<*>, totalItems: Int): Int {
         return when  {
+            //Si no tenemos objetos en la lista, no hay nada que mostrar
             list.isEmpty() -> 0
+            //Si hay más objetos que mostrar, tendremos el número de objetos de la lista y uno más
             totalItems > 0 -> list.size + 1
+            //Si no, simplemente los objetos de la lista
             else -> list.size
         }
     }

@@ -11,6 +11,7 @@ import com.entelgy.marvel.data.model.characters.ComicSummary
 import com.entelgy.marvel.data.model.comics.Comic
 import com.entelgy.marvel.data.model.comics.ComicDataWrapper
 import com.entelgy.marvel.data.model.imageformats.FullSizeImage
+import com.entelgy.marvel.data.model.utils.Role
 import com.entelgy.marvel.data.utils.Constants
 import com.entelgy.marvel.domain.usecases.network.comics.GetComicDetails
 import com.google.gson.JsonObject
@@ -19,9 +20,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * Presenter para mostrar los detalles de un comic
+ */
 class ComicDetailsPresenterImpl : ComicDetailsPresenter, CoroutineScope {
 
     override val coroutineContext: CoroutineContext
@@ -52,8 +55,12 @@ class ComicDetailsPresenterImpl : ComicDetailsPresenter, CoroutineScope {
         view = null
     }
 
+    /**
+     * Comprobamos que tenemos bien los datos del cómic
+     */
     override fun getData(intent: Intent?) {
         if (intent != null) {
+            //Recibimos un id para descargarnos los datos o un cómic completo para mostrarlo directamente
             val comicId = intent.getIntExtra(Constants.COMIC_ID, -1)
             comic = intent.getParcelableExtra(Constants.COMIC)
             when {
@@ -72,11 +79,16 @@ class ComicDetailsPresenterImpl : ComicDetailsPresenter, CoroutineScope {
         }
     }
 
+    /**
+     * Nos descargamos los datos del cómic a partir de su id
+     */
     private fun downloadData(comicId: Int) {
         launch {
             view?.showLoading()
             try {
+                //Obtenemos los datos del cómic
                 val result = GetComicDetails(comicId).downloadData()
+                //Comprobamos que la llamada ha sido satisfactoria
                 if (result.isSuccessful) {
                     view?.showLoading(false)
                     //Comprobamos el código que devuelve
@@ -86,12 +98,12 @@ class ComicDetailsPresenterImpl : ComicDetailsPresenter, CoroutineScope {
                         200 -> {
                             val comicsFound = comicDataWrapper.data?.count
                             val comicList = comicDataWrapper.data?.results
-                            //Comprobamos que tenemos en la lista algún personaje (sólo
+                            //Comprobamos que tenemos en la lista algún cómic (sólo uno)
                             if (comicList != null && comicList.isNotEmpty() && comicsFound == 1) {
                                 comic = comicList[0]
-                                //Volvemos a comprobar que efectivamente tenemos un personaje
-                                comic?.let { character ->
-                                    showDataFromComic(character, comicDataWrapper)
+                                //Volvemos a comprobar que efectivamente tenemos un cómic
+                                comic?.let { comic ->
+                                    showDataFromComic(comic, comicDataWrapper)
                                 } ?: run {
                                     view?.onComicNotFound()
                                 }
@@ -99,7 +111,7 @@ class ComicDetailsPresenterImpl : ComicDetailsPresenter, CoroutineScope {
                                 view?.onComicNotFound()
                             }
                         }
-                        //Personaje no encontrado
+                        //Cömic no encontrado
                         404 -> {
                             view?.onComicNotFound()
                         }
@@ -111,6 +123,7 @@ class ComicDetailsPresenterImpl : ComicDetailsPresenter, CoroutineScope {
                         }
                     }
                 } else {
+                    //Si ha fallado, mostramos el error
                     view?.showLoading(false)
                     val errorBody = result.errorBody()?.string()
                     if (errorBody != null) {
@@ -132,6 +145,9 @@ class ComicDetailsPresenterImpl : ComicDetailsPresenter, CoroutineScope {
         }
     }
 
+    /**
+     * Va llamando a la vista para mostrar los datos del cómic
+     */
     private fun showDataFromComic(comic: Comic,
                                       comicDataWrapper: ComicDataWrapper?) {
         //Mostramos el título
@@ -230,6 +246,10 @@ class ComicDetailsPresenterImpl : ComicDetailsPresenter, CoroutineScope {
         view?.showCopyright(comicDataWrapper?.copyright ?: Constants.COPYRIGHT_TEXT)
     }
 
+    /**
+     * Cuando seleccionamos un cómic (de la lista de las colecciones, por ejemplo), vamos a
+     * mostrar sus datos
+     */
     override fun onComicSelected(comic: ComicSummary) {
         val id = comic.getId()
 
@@ -242,21 +262,31 @@ class ComicDetailsPresenterImpl : ComicDetailsPresenter, CoroutineScope {
         }
     }
 
+    /**
+     * Aquí nunca llegaremos porque no tenemos ningún adapter en la panatlla que indique que hay
+     * más cómics disponibles
+     */
     override fun onMoreComicsSelected() {
-        Toast.makeText(view?.viewContext, "NOT YET STRING", Toast.LENGTH_LONG).show()
+        //NOTHING HERE
     }
 
+    /**
+     * Abrimos los detalles del personaje seleccionado (aquí nunca llegaremos en esta pantalla en realidad)
+     */
     override fun onCharacterSelected(character: Character) {
         view?.viewContext?.let { context ->
             Routing.goToCharacterDetailsActivity(context, character)
         }
     }
 
+    /**
+     * Abrimos los detalles del personaje seleccionado
+     */
     override fun onCharacterSelected(character: CharacterSummary) {
         //El id del comic está en la última parte de la uri (ej: http://gateway.marvel.com/v1/public/characters/1009257)
-        character.resourceURI?.let { uri ->
-            val urlSplit = uri.split("/")
-            val id = urlSplit[urlSplit.size-1].toInt()
+        val id = character.getId()
+        //Comprobamos que tenemos id
+        if (id != null) {
             view?.viewContext?.let { context ->
                 Routing.goToCharacterDetailsActivity(context, id, character.name ?: "")
             }
@@ -272,6 +302,9 @@ class ComicDetailsPresenterImpl : ComicDetailsPresenter, CoroutineScope {
         }
     }
 
+    /*
+     * Estos métodos no están implementados porque no hacemos nada
+     */
     override fun onEventSelected(event: EventSummary) {
         Toast.makeText(view?.viewContext, "NOT YET IMPLEMENTED", Toast.LENGTH_LONG).show()
     }
@@ -288,6 +321,9 @@ class ComicDetailsPresenterImpl : ComicDetailsPresenter, CoroutineScope {
         Toast.makeText(view?.viewContext, "NOT YET IMPLEMENTED", Toast.LENGTH_LONG).show()
     }
 
+    /**
+     * Abrimos el webView
+     */
     override fun onUrlSelected(url: Url) {
         //Sólo podremos abrir la activity si tenemos contexto
         view?.viewContext?.let { context ->
@@ -295,6 +331,9 @@ class ComicDetailsPresenterImpl : ComicDetailsPresenter, CoroutineScope {
         }
     }
 
+    /**
+     * Muestra la portada en alta resolución
+     */
     override fun showCoverImageDetail() {
         comic?.let { comic ->
             view?.viewContext?.let { context ->
@@ -303,36 +342,46 @@ class ComicDetailsPresenterImpl : ComicDetailsPresenter, CoroutineScope {
         }
     }
 
+    /**
+     * Muestra los personajes del cómic
+     */
     override fun showCharacters() {
         view?.showCharacters(comic?.characters)
     }
 
+    /**
+     * Muestra la historias en las que aparece el cómic
+     */
     override fun showStories() {
         view?.showStories(comic?.stories)
     }
 
+    /**
+     * Muestra los eventos en los que aparece el cómic
+     */
     override fun showEvents() {
         view?.showEvents(comic?.events)
     }
 
-    override fun showPhotoDetail() {
-        comic?.let { comic ->
-            view?.viewContext?.let { context ->
-                Routing.goToPhotoActivity(context, comic.getThumbnailPath(FullSizeImage()))
-            }
-        }
-    }
-
+    /**
+     * Muestra las variantes de este cómic
+     */
     override fun showVariants() {
         comic?.let { comic ->
+            //Si tenemos variantes, claro
             if (comic.variants.isNotEmpty()) {
                 view?.getSupportFragmentManager()?.let { fragmentManager ->
                     Routing.openComicVariantsDialog(fragmentManager, comic.variants)
                 }
+            } else {
+                view?.showError(view?.viewContext?.getString(R.string.no_variants_available) ?: "")
             }
         }
     }
 
+    /**
+     * Muestra la lista de imágenes promocionales
+     */
     override fun showPromotionalImages() {
         comic?.let { comic ->
             view?.viewContext?.let { context ->

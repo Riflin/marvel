@@ -13,6 +13,9 @@ import com.entelgy.marvel.data.model.StorySummary
 import com.entelgy.marvel.data.utils.Constants
 import com.entelgy.marvel.databinding.ItemSummaryBinding
 
+/**
+ * Adapter para las historias. Mismo funcionamieneo que el de comics, eventos y series
+ */
 class StorySummaryAdapter(context: Context, private val stories: List<StorySummary>, private val totalStories: Int,
                           private val callback: StoriesCallback): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

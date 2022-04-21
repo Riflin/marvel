@@ -1,4 +1,4 @@
-package com.entelgy.marvel.data.model
+package com.entelgy.marvel.data.model.utils
 
 /**
  * Clase para enumerar los distintos roles que tienen los creadores

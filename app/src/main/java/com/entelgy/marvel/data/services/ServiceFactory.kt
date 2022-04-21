@@ -17,6 +17,9 @@ object ServiceFactory {
 
     private const val TIMEOUT = 600L
 
+    /**
+     * Crea el objeto Retrofit con que hacer las llamadas
+     */
     private fun getRetrofit(): Retrofit {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BASIC
@@ -33,13 +36,17 @@ object ServiceFactory {
 
         return Retrofit.Builder().baseUrl(Constants.URL_BASE)
             .client(client)
+            //Gson propio creado para obtener bien la información
             .addConverterFactory(GsonConverterFactory.create(DataUtils.getGson()))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
 
     }
 
-    fun getParamsInterceptor(): Interceptor {
+    /**
+     * Con esto añadimos los parámetros necesarios a las llamadas para que funcione bien la api
+     */
+    private fun getParamsInterceptor(): Interceptor {
         val timestamp = System.currentTimeMillis()
         val hash = DataUtils.getHash(timestamp)
 
@@ -58,10 +65,12 @@ object ServiceFactory {
         return parametersInterceptor
     }
 
+    //Obtiene el servicio con el que llamar para la info de los personajes
     fun getCharactersService(): CharactersService {
         return getRetrofit().create(CharactersService::class.java)
     }
 
+    //Servicio para los cómics
     fun getComicsService(): ComicsService {
         return getRetrofit().create(ComicsService::class.java)
     }

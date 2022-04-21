@@ -16,6 +16,12 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import java.lang.Exception
 
+/**
+ * Pantalla que muestra una imagen en alta resolución.
+ *
+ * Esta pantalla podría estar fusionada con la de PhotoListActivity, pero se hizo antes que la
+ * otra y ya preferí dejarla así
+ */
 class PhotoActivity: BaseActivity(), PhotoView {
 
     private lateinit var binding: ActivityPhotoBinding
@@ -23,6 +29,9 @@ class PhotoActivity: BaseActivity(), PhotoView {
     private lateinit var presenter: PhotoPresenter
 
     companion object {
+        /**
+         * Debemos pasar la url de la foto a mostrar
+         */
         fun createNewIntent(context: Context, url: String): Intent {
             return Intent(context, PhotoActivity::class.java).apply {
                 putExtra(Constants.URL, url)
@@ -36,9 +45,13 @@ class PhotoActivity: BaseActivity(), PhotoView {
 
         setContentView(binding.root)
 
+        //Como siempre, el presenter se encarga de ver si hay fallos o no
         presenter.getData(intent)
     }
 
+    /**
+     * Muestra la iamgen
+     */
     override fun showPhoto(url: String) {
         binding.progressBar.visibility = View.VISIBLE
         Picasso.get().load(url).into(binding.ivPhoto, object: Callback {
@@ -65,6 +78,7 @@ class PhotoActivity: BaseActivity(), PhotoView {
     }
 
     override fun initViews() {
+        //Flechita hacia atrás habilitada (este layout no tiene toolbar propio, sino el de android)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }
@@ -75,12 +89,5 @@ class PhotoActivity: BaseActivity(), PhotoView {
 
     override fun showLoading(show: Boolean) {
         binding.progressBar.visibility = if (show) View.VISIBLE else View.GONE
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            finish()
-        }
-        return true
     }
 }

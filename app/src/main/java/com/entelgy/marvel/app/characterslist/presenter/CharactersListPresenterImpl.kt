@@ -21,6 +21,10 @@ import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * Este presenter está parametrizado y es open para que pueda heredar de él el presenter de la
+ * pantalla de los personajes por cómic
+ */
 open class CharactersListPresenterImpl<T: CharactersListView> : CharactersListPresenter<T>,
     NameFilterCallback, CoroutineScope {
 
@@ -33,13 +37,15 @@ open class CharactersListPresenterImpl<T: CharactersListView> : CharactersListPr
         get() = Dispatchers.Main + job
     private val job = Job()
 
+    //Ordenaciones
     protected var sortName: Sort? = null
     protected var sortDate: Sort? = null
 
+    //Filtros
     protected var filterName: String? = null
     protected var filterDate: Date? = null
 
-
+    //Aquí guardamos la última información descargada, para tener en cuenta lo que llevamos descargado
     protected var lastDataFetched: CharacterDataContainer? = null
 
     override fun create() {
@@ -76,8 +82,12 @@ open class CharactersListPresenterImpl<T: CharactersListView> : CharactersListPr
         }
     }
 
+    /**
+     * Hemos elegido un nombre para filtrar
+     */
     override fun onNameFilterSelected(name: String?) {
 
+        //Ocultamos el diálogo
         val dialog = view?.getSupportFragmentManager()?.findFragmentByTag("NAME") as? DialogFragment
         dialog?.dismiss()
 
@@ -199,6 +209,7 @@ open class CharactersListPresenterImpl<T: CharactersListView> : CharactersListPr
                 } else {
                     0
                 }
+                //Obtenemos los personajes con los filtros seleccionados
                 val result = GetCharactersFromServer(filterName, filterDate, sort, offset).downloadData()
 
                 //Comprobamos que la llamada ha sido correcta
@@ -261,6 +272,9 @@ open class CharactersListPresenterImpl<T: CharactersListView> : CharactersListPr
         return sort
     }
 
+    /**
+     * Obtiene más personajes a partir de los que ya teníamos descargados
+     */
     override fun getMoreCharacters() {
         //Sólo descargamos más personajes si tenemos algo más que descargar
         lastDataFetched?.let { lastDataFetched ->
@@ -272,6 +286,7 @@ open class CharactersListPresenterImpl<T: CharactersListView> : CharactersListPr
                 downloadCharacters(loadMoreCharacters = true)
             }
         } ?: run {
+            //Realmente aquí nunca llegaremos, porque para cargar más datos debemos haber descargado antes
             downloadCharacters(loadMoreCharacters = true)
         }
     }
