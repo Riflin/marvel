@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- El clearTextTraffic es necesario para poder cargar las imágenes sin problemas -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,15 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Marvel"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m">
 
-        <activity
-            android:name=".app.splash.SplashActivity"
-            android:exported="true"
-            android:screenOrientation="fullSensor"
-            android:theme="@style/Theme.Marvel.NoActionBar">
-
-        </activity>
         <activity
             android:name=".app.characterslist.CharactersListActivity"
             android:exported="true"
@@ -63,6 +58,13 @@
             android:theme="@style/Theme.Marvel.NoActionBar"
             tools:ignore="LockedOrientationActivity"
             android:label="@string/image_list"/>
+
+        <activity
+            android:name=".app.charactersbycomic.CharactersByComicActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Marvel.NoActionBar"
+            tools:ignore="LockedOrientationActivity"/>
     </application>
 
 </manifest>

@@ -686,7 +686,6 @@
                             android:textStyle="normal"
                             android:textSize="14sp"
                             android:textColor="@color/black"
-                            android:layout_marginTop="4dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/tvTextInkers"
                             app:layout_constraintBottom_toBottomOf="parent"/>
@@ -716,7 +715,6 @@
                             android:textStyle="normal"
                             android:textSize="14sp"
                             android:textColor="@color/black"
-                            android:layout_marginTop="4dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/tvTextColorists"
                             app:layout_constraintBottom_toBottomOf="parent"/>
@@ -746,7 +744,6 @@
                             android:textStyle="normal"
                             android:textSize="14sp"
                             android:textColor="@color/black"
-                            android:layout_marginTop="4dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/tvTextLetterers"
                             app:layout_constraintBottom_toBottomOf="parent"/>
@@ -776,7 +773,6 @@
                             android:textStyle="normal"
                             android:textSize="14sp"
                             android:textColor="@color/black"
-                            android:layout_marginTop="4dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/tvTextPainters"
                             app:layout_constraintBottom_toBottomOf="parent"/>
@@ -806,7 +802,6 @@
                             android:textStyle="normal"
                             android:textSize="14sp"
                             android:textColor="@color/black"
-                            android:layout_marginTop="4dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/tvTextEditors"
                             app:layout_constraintBottom_toBottomOf="parent"/>
@@ -867,7 +862,6 @@
                                 android:textStyle="normal"
                                 android:textSize="14sp"
                                 android:textColor="@color/black"
-                                android:layout_marginTop="4dp"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/tvTextPencilersCover"
                                 app:layout_constraintBottom_toBottomOf="parent"/>
@@ -897,7 +891,6 @@
                                 android:textStyle="normal"
                                 android:textSize="14sp"
                                 android:textColor="@color/black"
-                                android:layout_marginTop="4dp"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/tvTextColoristsCover"
                                 app:layout_constraintBottom_toBottomOf="parent"/>
@@ -927,7 +920,6 @@
                                 android:textStyle="normal"
                                 android:textSize="14sp"
                                 android:textColor="@color/black"
-                                android:layout_marginTop="4dp"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/tvTextInkersCover"
                                 app:layout_constraintBottom_toBottomOf="parent"/>
@@ -957,7 +949,6 @@
                                 android:textStyle="normal"
                                 android:textSize="14sp"
                                 android:textColor="@color/black"
-                                android:layout_marginTop="4dp"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/tvTextPaintersCover"
                                 app:layout_constraintBottom_toBottomOf="parent"/>
@@ -987,7 +978,6 @@
                                 android:textStyle="normal"
                                 android:textSize="14sp"
                                 android:textColor="@color/black"
-                                android:layout_marginTop="4dp"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/tvTextLetterersCover"
                                 app:layout_constraintBottom_toBottomOf="parent"/>
@@ -1017,7 +1007,6 @@
                                 android:textStyle="normal"
                                 android:textSize="14sp"
                                 android:textColor="@color/black"
-                                android:layout_marginTop="4dp"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/tvTextEditorsCover"
                                 app:layout_constraintBottom_toBottomOf="parent"/>

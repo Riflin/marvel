@@ -79,7 +79,7 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
     }
 
     override fun init() {
-        presenter = ComicDetailsPresenterImpl()
+        presenter = PresenterFactory.getComicDetailPresenter()
         presenter.view = this
         presenter.create()
     }
@@ -140,11 +140,18 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Muestra el título del cómic
+     */
     override fun showTitle(title: String) {
         binding.tvTitle.text = title
     }
 
+    /**
+     * Muestra la portada del cómic
+     */
     override fun showImage(path: String) {
+        //El progress mientras cargamos la imagen, siempre presente
         binding.progressImage.visibility = View.VISIBLE
         Picasso.get().load(path).into(binding.ivCover, object: Callback {
             override fun onSuccess() {
@@ -159,6 +166,7 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
     }
 
     override fun showPublishedDate(date: Date?) {
+        //Si no tenemos fecha de publicación, indicamos "no disponible"
         if (date != null) {
             binding.tvPublished.text = sdf.format(date)
         } else {
@@ -178,6 +186,10 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Aquí creamos una String con los nombres de cada uno de los creadores, separados por comas.
+     * Es común para todos los creadores, indistintamente de su rol
+     */
     private fun getCreatorsList(creators: List<CreatorSummary>): String {
         var autores = ""
         for (author in creators.withIndex()) {
@@ -555,12 +567,18 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Muestra el número de personajes, eventos e historias en su pestaña correspondiente
+     */
     override fun showNumberOfItems(characters: Int, events: Int, stories: Int) {
         binding.tvCharacters.text = getString(R.string.number_of_characters, characters)
         binding.tvEvents.text = getString(R.string.number_of_events, events)
         binding.tvStories.text = getString(R.string.number_of_stories, stories)
     }
 
+    /**
+     * Error mostrado cuando el servidor nos devuelve un 404
+     */
     override fun onComicNotFound() {
         AppUtils.showDialogInformacion(supportFragmentManager, getString(R.string.error),
             getString(R.string.comic_not_found)) { finish() }
@@ -571,12 +589,14 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
     }
 
     override fun showCharacters(characters: CharacterList?) {
+        //Seleccionamos la pestaña de los personajes
         binding.tvCharacters.isSelected = true
         binding.tvEvents.isSelected = false
         binding.tvStories.isSelected = false
 
         if (characters != null) {
             if (characters.items.isNotEmpty()) {
+                //Comprobamos si hay más disponibles de los mostrados
                 val moreCharactersAvailable = (characters.available ?: 0).minus(characters.returned ?: 0)
                 val adapter = CharacterSummaryAdapter(this, characters.items, moreCharactersAvailable, presenter)
                 binding.rvItems.adapter = adapter
@@ -591,12 +611,14 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
     }
 
     override fun showStories(stories: StoryList?) {
+        //Seleccionamos la pestaña de las histoiras
         binding.tvCharacters.isSelected = false
         binding.tvEvents.isSelected = false
         binding.tvStories.isSelected = true
 
         if (stories != null) {
             if (stories.items.isNotEmpty()) {
+                //Comprobamos si hay más disponibles
                 val moreStoriesAvailable = (stories.available ?: 0).minus(stories.returned ?: 0)
                 val adapter = StorySummaryAdapter(this, stories.items, moreStoriesAvailable, presenter)
                 binding.rvItems.adapter = adapter
@@ -610,6 +632,10 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Con este método mostramos el emptyView, que es común para todas las pestañas, cuando no tengamos
+     * datos en una de las secciones.
+     */
     private fun showEmptyView(emptyText: String) {
         binding.rvItems.visibility = View.GONE
         binding.emptyView.visibility = View.VISIBLE
@@ -617,12 +643,15 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
     }
 
     override fun showEvents(events: EventList?) {
+        //Seleccionamos la pestaña de los eventos
         binding.tvCharacters.isSelected = false
         binding.tvEvents.isSelected = true
         binding.tvStories.isSelected = false
 
+        //Mostramos la lista de eventos, si tenemos
         if (events != null) {
             if (events.items.isNotEmpty()) {
+                //Si el campo "available" es mayor que el "returned", tendremos más eventos disponibles
                 val moreEventsAvailable = (events.available ?: 0).minus(events.returned ?: 0)
                 val adapter = EventSummaryAdapter(this, events.items, moreEventsAvailable, presenter)
                 binding.rvItems.adapter = adapter
@@ -636,6 +665,9 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         }
     }
 
+    /**
+     * Muestra u oculta la parte de los enlaces disponibles
+     */
     override fun showUrls(urls: ArrayList<Url>?) {
         if (urls.isNullOrEmpty()) {
             binding.clEnlaces.visibility = View.GONE
@@ -650,8 +682,19 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
         binding.progress.visibility = if (show) View.VISIBLE else View.GONE
     }
 
+    /**
+     * Si no hemos podido descargar bien la información del cómic, cerramos la pantalla
+     */
     override fun onErrorParsingData(message: String) {
         AppUtils.showDialogInformacion(supportFragmentManager, getString(R.string.error),
             getString(R.string.error_parseando_info, message)) { finish() }
+    }
+
+    /**
+     * Si no hemos podido obtener el id del comic, cerramos la pantalla
+     */
+    override fun onComicNotSelectable() {
+        AppUtils.showDialogInformacion(supportFragmentManager, getString(R.string.error),
+            getString(R.string.error_comic_without_id)) { finish() }
     }
 }

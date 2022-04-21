@@ -4,7 +4,12 @@ import com.entelgy.marvel.app.callbacks.CharactersCallback
 import com.entelgy.marvel.app.characterslist.CharactersListView
 import com.entelgy.marvel.app.utils.base.Presenter
 
-interface CharactersListPresenter: Presenter<CharactersListView>, CharactersCallback {
+/**
+ * Este presenter lo creamos parametrizado para que pueda ser heredado por el presenter
+ * de los personajes por cómic (@see CharactersByComicPresenter) y así poder reutilizar código
+ * y no tener que reescribir la misma funcionalidad dos veces
+ */
+interface CharactersListPresenter<T: CharactersListView>: Presenter<T>, CharactersCallback {
 
     fun selectNameFilter()
 

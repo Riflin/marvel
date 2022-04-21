@@ -31,9 +31,10 @@ class CharacterDetailsActivity : BaseActivity(), CharacterDetailsView {
 
     companion object {
 
-        fun createNewIntent(context: Context, characterId: Int): Intent {
+        fun createNewIntent(context: Context, characterId: Int, characterName: String): Intent {
             return Intent(context, CharacterDetailsActivity::class.java).apply {
                 putExtra(Constants.CHARACTER_ID, characterId)
+                putExtra(Constants.CHARACTER_NAME, characterName)
             }
         }
 
@@ -103,7 +104,10 @@ class CharacterDetailsActivity : BaseActivity(), CharacterDetailsView {
     }
 
     override fun showName(name: String) {
-        binding.tvTitle.text = name
+        setSupportActionBar(null)
+        binding.toolbar.title = name
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.title = name
     }
 
     override fun showBio(bio: String?) {

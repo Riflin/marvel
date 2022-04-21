@@ -49,6 +49,10 @@ data class Character(
         parcel.readParcelable(SeriesList::class.java.classLoader)
     )
 
+    /**
+     * En este método obtenemos la dirección correcta de las imágenes a mostrar, en función del tipo
+     * de imagen que queramos
+     */
     fun getThumbnailPath(imageFormat: ImageFormat): String {
         return when (imageFormat) {
             is FullSizeImage -> thumbnail?.path + "." + thumbnail?.extension

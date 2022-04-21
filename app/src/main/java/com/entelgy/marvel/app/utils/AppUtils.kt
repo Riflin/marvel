@@ -37,16 +37,6 @@ object AppUtils {
         showDialogInformacion(fragmentManager, title, text, null)
     }
 
-    fun getPicasso(context: Context): Picasso {
-        val parametersInterceptor = ServiceFactory.getParamsInterceptor()
-
-        val client: OkHttpClient = OkHttpClient.Builder().addInterceptor(parametersInterceptor).build()
-        return Picasso.Builder(context)
-            .downloader(OkHttp3Downloader(client))
-            .build()
-
-    }
-
     /**
      * Método creado para calcular el número total de filas a mostrar en un adapter de los artículos
      * (comics, eventos, etc) de un personaje en particular

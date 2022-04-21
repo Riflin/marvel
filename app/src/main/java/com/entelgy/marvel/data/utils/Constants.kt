@@ -10,10 +10,12 @@ object Constants {
     const val URL_BASE = "https://gateway.marvel.com:443"
 
     const val CHARACTER_ID = "characterId"
+    const val CHARACTER_NAME = "characterName"
     const val CHARACTER = "character"
 
     const val COMIC_ID = "comicId"
     const val COMIC = "comic"
+    const val COMIC_VARIANTS = "comicVariants"
 
     const val URL = "url"
 

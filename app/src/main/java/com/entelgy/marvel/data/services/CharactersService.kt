@@ -12,9 +12,17 @@ interface CharactersService {
     suspend fun getCharacters(@Query("nameStartsWith") nameStart: String?,
                               @Query("modifiedSince") date: String?,
                               @Query("orderBy") orderBy: String?,
-                              @Query("limit") limit: Int? = 400,
+                              @Query("limit") limit: Int? = 50,
                               @Query("offset") offset: Int? = 0): Response<CharacterDataWrapper>
 
     @GET("/v1/public/characters/{characterId}")
     suspend fun getCharacterDetail(@Path("characterId") characterId: Int): Response<CharacterDataWrapper>
+
+    @GET("/v1/public/comics/{comicId}/characters")
+    suspend fun getCharactersByComic(@Path("comicId") comicId: Int,
+                                     @Query("nameStartsWith") nameStart: String?,
+                                     @Query("modifiedSince") date: String?,
+                                     @Query("orderBy") orderBy: String?,
+                                     @Query("limit") limit: Int? = 50,
+                                     @Query("offset") offset: Int? = 0): Response<CharacterDataWrapper>
 }

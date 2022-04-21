@@ -32,11 +32,11 @@ class DialogFiltroNombre: BaseDialogFragment() {
         }
     }
 
-    private var _binding: DialogFiltroNombreBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: DialogFiltroNombreBinding
 
     private var texto: String? = null
 
+    //Callback al que llamar cuando le demos a aceptar
     private lateinit var callback: NameFilterCallback
 
     override fun onCreateView(
@@ -44,13 +44,14 @@ class DialogFiltroNombre: BaseDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = DialogFiltroNombreBinding.inflate(inflater, container, false)
+        binding = DialogFiltroNombreBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun init() {
         texto = arguments?.getString(TEXTO)
 
+        //Si no tenemos callback, fuera
         if (!this::callback.isInitialized) {
             Toast.makeText(requireContext(), getString(R.string.error_instanciando_dialogo), Toast.LENGTH_LONG).show()
             dismissAllowingStateLoss()

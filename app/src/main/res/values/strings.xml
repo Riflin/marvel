@@ -14,7 +14,7 @@
     <string name="aceptar">Aceptar</string>
     <string name="seleccione_filtro_nombre">Escriba el nombre por el que quiere que comiencen los personajes (ejemplo: Spider-Man)</string>
     <string name="error_instanciando_dialogo">Error instanciando el diálogo</string>
-    <string name="personajes_marvel">Personajes Marvel</string>
+    <string name="characters_list">Listado de personajes</string>
     <string name="ocultar_filtros">Ocultar filtros</string>
     <string name="progreso">Progreso</string>
     <string name="thumbnail">Thumbnail</string>
@@ -109,4 +109,10 @@
     <string name="image_list">Listado de imágenes</string>
     <string name="photo_index">Imagen %1$d de %2$d</string>
     <string name="error_downloading_characters">Error obteniendo personajes</string>
+    <string name="error_downloading_character_details">Error obteniendo los detalles del personaje</string>
+    <string name="error_downloading_comic_details">Error obteniendo los detalles del cómic</string>
+    <string name="comic_variants">Variantes del cómic</string>
+    <string name="error_comic_without_id">Ocurrió un error al obtener el id del comic seleccionado y no es posible ver sus detalles</string>
+    <string name="characters_by_comic">Personajes del cómic</string>
+    <string name="personajes_presentes_en_el_comic">Personajes presentes en el cómic %1$s</string>
 </resources>

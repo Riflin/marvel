@@ -2,7 +2,7 @@ package com.entelgy.marvel.app.comicdetails.presenter
 
 import android.content.Intent
 import android.widget.Toast
-import com.entelgy.marvel.app.characterdetails.CharacterDetailsActivity
+import com.entelgy.marvel.R
 import com.entelgy.marvel.app.comicdetails.ComicDetailsView
 import com.entelgy.marvel.app.routing.Routing
 import com.entelgy.marvel.data.model.*
@@ -11,9 +11,10 @@ import com.entelgy.marvel.data.model.characters.ComicSummary
 import com.entelgy.marvel.data.model.comics.Comic
 import com.entelgy.marvel.data.model.comics.ComicDataWrapper
 import com.entelgy.marvel.data.model.imageformats.FullSizeImage
-import com.entelgy.marvel.data.model.imageformats.PortraitImage
 import com.entelgy.marvel.data.utils.Constants
 import com.entelgy.marvel.domain.usecases.network.comics.GetComicDetails
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -110,9 +111,19 @@ class ComicDetailsPresenterImpl : ComicDetailsPresenter, CoroutineScope {
                         }
                     }
                 } else {
-                    val jsonObj = JSONObject(result.errorBody()?.charStream()?.readText() ?: "{\"msg\":\"\"}")
                     view?.showLoading(false)
-                    view?.onErrorParsingData(jsonObj.getString("msg"))
+                    val errorBody = result.errorBody()?.string()
+                    if (errorBody != null) {
+                        val json = JsonParser.parseString(errorBody)
+                        if (json is JsonObject) {
+                            val status = json.get("status").asString
+                            view?.onErrorParsingData(status)
+                        } else {
+                            view?.onErrorParsingData(view?.viewContext?.getString(R.string.error_downloading_comic_details) ?: "")
+                        }
+                    } else {
+                        view?.onErrorParsingData(view?.viewContext?.getString(R.string.error_downloading_comic_details) ?: "")
+                    }
                 }
             } catch (e: Exception) {
                 view?.showLoading(false)
@@ -220,24 +231,23 @@ class ComicDetailsPresenterImpl : ComicDetailsPresenter, CoroutineScope {
     }
 
     override fun onComicSelected(comic: ComicSummary) {
-        comic.resourceURI?.let { uri ->
-            //El id del comic está en la última parte de la uri (ej: http://gateway.marvel.com/v1/public/comics/4100)
-            val urlSplit = uri.split("/")
-            val id = urlSplit[urlSplit.size-1].toInt()
+        val id = comic.getId()
 
-            //TODO Hacerlo en un routing!!!
-            view?.context?.let { context ->
+        if (id != null) {
+            view?.viewContext?.let { context ->
                 Routing.goToComicDetailsActivity(context, id)
             }
+        } else {
+            view?.onComicNotSelectable()
         }
     }
 
     override fun onMoreComicsSelected() {
-        Toast.makeText(view?.context, "NOT YET STRING", Toast.LENGTH_LONG).show()
+        Toast.makeText(view?.viewContext, "NOT YET STRING", Toast.LENGTH_LONG).show()
     }
 
     override fun onCharacterSelected(character: Character) {
-        view?.context?.let { context ->
+        view?.viewContext?.let { context ->
             Routing.goToCharacterDetailsActivity(context, character)
         }
     }
@@ -247,42 +257,47 @@ class ComicDetailsPresenterImpl : ComicDetailsPresenter, CoroutineScope {
         character.resourceURI?.let { uri ->
             val urlSplit = uri.split("/")
             val id = urlSplit[urlSplit.size-1].toInt()
-            view?.context?.let { context ->
-                Routing.goToCharacterDetailsActivity(context, id)
+            view?.viewContext?.let { context ->
+                Routing.goToCharacterDetailsActivity(context, id, character.name ?: "")
             }
         }
     }
 
     override fun onMoreCharactersSelected() {
-        Toast.makeText(view?.context, "NOT YET IMPLEMENTED", Toast.LENGTH_LONG).show()
+        //Tenemos que tener un cómic y context para poder ir a la siguiente activity
+        comic?.let { comic ->
+            view?.viewContext?.let { context ->
+                Routing.goToCharactersByComicActivity(context, comic.id ?: -1, comic.title ?: "")
+            }
+        }
     }
 
     override fun onEventSelected(event: EventSummary) {
-        Toast.makeText(view?.context, "NOT YET IMPLEMENTED", Toast.LENGTH_LONG).show()
+        Toast.makeText(view?.viewContext, "NOT YET IMPLEMENTED", Toast.LENGTH_LONG).show()
     }
 
     override fun onMoreEventSelected() {
-        Toast.makeText(view?.context, "NOT YET IMPLEMENTED", Toast.LENGTH_LONG).show()
+        Toast.makeText(view?.viewContext, "NOT YET IMPLEMENTED", Toast.LENGTH_LONG).show()
     }
 
     override fun onStorySelected(story: StorySummary) {
-        Toast.makeText(view?.context, "NOT YET IMPLEMENTED", Toast.LENGTH_LONG).show()
+        Toast.makeText(view?.viewContext, "NOT YET IMPLEMENTED", Toast.LENGTH_LONG).show()
     }
 
     override fun onMoreStoriesSelected() {
-        Toast.makeText(view?.context, "NOT YET IMPLEMENTED", Toast.LENGTH_LONG).show()
+        Toast.makeText(view?.viewContext, "NOT YET IMPLEMENTED", Toast.LENGTH_LONG).show()
     }
 
     override fun onUrlSelected(url: Url) {
         //Sólo podremos abrir la activity si tenemos contexto
-        view?.context?.let {context ->
+        view?.viewContext?.let { context ->
             Routing.goToWebActivity(context, url)
         }
     }
 
     override fun showCoverImageDetail() {
         comic?.let { comic ->
-            view?.context?.let { context ->
+            view?.viewContext?.let { context ->
                 Routing.goToPhotoActivity(context, comic.getThumbnailPath(FullSizeImage()))
             }
         }
@@ -302,19 +317,25 @@ class ComicDetailsPresenterImpl : ComicDetailsPresenter, CoroutineScope {
 
     override fun showPhotoDetail() {
         comic?.let { comic ->
-            view?.context?.let { context ->
+            view?.viewContext?.let { context ->
                 Routing.goToPhotoActivity(context, comic.getThumbnailPath(FullSizeImage()))
             }
         }
     }
 
     override fun showVariants() {
-        Toast.makeText(view?.context, "NOT YET IMPLEMENTED", Toast.LENGTH_LONG).show()
+        comic?.let { comic ->
+            if (comic.variants.isNotEmpty()) {
+                view?.getSupportFragmentManager()?.let { fragmentManager ->
+                    Routing.openComicVariantsDialog(fragmentManager, comic.variants)
+                }
+            }
+        }
     }
 
     override fun showPromotionalImages() {
         comic?.let { comic ->
-            view?.context?.let { context ->
+            view?.viewContext?.let { context ->
                 Routing.goToPhotoListActivity(context, comic.images)
             }
         }

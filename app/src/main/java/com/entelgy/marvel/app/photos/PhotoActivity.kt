@@ -53,13 +53,6 @@ class PhotoActivity: BaseActivity(), PhotoView {
         })
     }
 
-    override fun onDataError() {
-        AppUtils.showDialogInformacion(supportFragmentManager, getString(R.string.error),
-            getString(R.string.error_obteniendo_datos)) {
-            finish()
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         presenter.destroy()

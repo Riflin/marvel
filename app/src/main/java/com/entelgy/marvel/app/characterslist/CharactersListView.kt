@@ -31,6 +31,10 @@ interface CharactersListView : BaseView {
 
     fun resetSortDate()
 
+    fun sortByName(sortName: Sort)
+
+    fun sortByDate(sortName: Sort)
+
     fun showCharacters(characters: List<Character>)
 
     fun addCharacters(characters: List<Character>)

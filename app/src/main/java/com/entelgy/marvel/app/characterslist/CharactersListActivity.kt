@@ -21,20 +21,16 @@ import java.util.*
 class CharactersListActivity: BaseActivity(), CharactersListView, OnBottomReachedListener {
 
 
-    companion object {
-        fun createNewIntent(context: Context): Intent {
-            return Intent(context, CharactersListActivity::class.java)
-        }
-    }
     private lateinit var binding: ActivityCharactersListBinding
 
-    private lateinit var presenter: CharactersListPresenter
+    private lateinit var presenter: CharactersListPresenter<CharactersListView>
 
     private var adapter: CharactersAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        //Inflamos la vista de la actividad
         binding = ActivityCharactersListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -42,19 +38,26 @@ class CharactersListActivity: BaseActivity(), CharactersListView, OnBottomReache
         presenter.getDataFromServer()
     }
 
+    /**
+     * Siempre llamamos al destroy() del presenter en cada activity, para limpiar la vista y que no haya fugas de memoria
+     */
     override fun onDestroy() {
         super.onDestroy()
         presenter.destroy()
     }
 
     override fun init() {
+        //Inicializamos el presenter
         presenter = PresenterFactory.getCharactersListPresenter()
         presenter.view = this
         presenter.create()
     }
 
     override fun initViews() {
-        binding.toolbar.title = getString(R.string.personajes_marvel)
+        //Inicializamos las vistas
+        //Título de la activity
+        binding.toolbar.title = getString(R.string.characters_list)
+        //Colores del progress del swipeToRefresh
         binding.swRefresh.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorPrimary),
             ContextCompat.getColor(this, R.color.colorPrimaryDark), ContextCompat.getColor(this, R.color.dark_green),
             ContextCompat.getColor(this, R.color.purple_200), ContextCompat.getColor(this, R.color.green))
@@ -62,6 +65,7 @@ class CharactersListActivity: BaseActivity(), CharactersListView, OnBottomReache
             ContextCompat.getColor(this, R.color.colorPrimaryDark), ContextCompat.getColor(this, R.color.dark_green),
             ContextCompat.getColor(this, R.color.purple_200), ContextCompat.getColor(this, R.color.green))
 
+        //Mostraremos los personajes en un gridlayout de dos columnas
         val layoutManager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
         binding.rvCharacters.layoutManager = layoutManager
     }
@@ -100,8 +104,12 @@ class CharactersListActivity: BaseActivity(), CharactersListView, OnBottomReache
 
     override fun showLoading(show: Boolean) {
         binding.swRefresh.isRefreshing = show
+        binding.swEmptyRefresh.isRefreshing = show
     }
 
+    /**
+     * Muestra el filtro introducido por el usuario
+     */
     override fun onFilterNameSelected(filter: String) {
         //Ponemos el nombre buscado en el botón
         binding.tvFiltroNombre.text = filter
@@ -111,6 +119,9 @@ class CharactersListActivity: BaseActivity(), CharactersListView, OnBottomReache
         binding.tvHintNombre.visibility = View.VISIBLE
     }
 
+    /**
+     * Resetea el filtro por nombre
+     */
     override fun resetFilterName() {
         //Volvemos a ponerle el texto original
         binding.tvFiltroNombre.text = getString(R.string.nombre)
@@ -125,6 +136,9 @@ class CharactersListActivity: BaseActivity(), CharactersListView, OnBottomReache
         binding.ivBorrarNombre.visibility = if (show) View.VISIBLE else View.GONE
     }
 
+    /**
+     * Muestra la fecha elegida por el usuario
+     */
     override fun onFilterDateSelected(date: Date) {
         //Mostramos la fecha elegida
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -133,6 +147,9 @@ class CharactersListActivity: BaseActivity(), CharactersListView, OnBottomReache
         binding.tvHintFecha.visibility = View.VISIBLE
     }
 
+    /**
+     * Resetea el filtro de la fecha
+     */
     override fun resetFilterDate() {
         binding.tvHintFecha.visibility = View.GONE
         binding.tvFiltroFecha.text = getString(R.string.fecha_modificacion)
@@ -143,6 +160,9 @@ class CharactersListActivity: BaseActivity(), CharactersListView, OnBottomReache
         binding.ivBorrarFecha.visibility = if (show) View.VISIBLE else View.GONE
     }
 
+    /**
+     * Muestar la ordenación por nombre escogida
+     */
     override fun onSortNameSelected(sort: Sort) {
         when (sort) {
             Sort.Ascending -> {
@@ -152,13 +172,20 @@ class CharactersListActivity: BaseActivity(), CharactersListView, OnBottomReache
                 binding.tvSortName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down, 0)
             }
         }
+        //Seleccionamos el textView para que se ponga con el color de seleccionado
         binding.tvSortName.isSelected = true
     }
 
+    /**
+     * Muestra el botón para eliminar la ordenación por nombre
+     */
     override fun showDeleteSortName(show: Boolean) {
         binding.ivBorrarSortName.visibility = if (show) View.VISIBLE else View.GONE
     }
 
+    /**
+     * Ordenación por fecha escogida
+     */
     override fun onSortDateSelected(sort: Sort) {
         when (sort) {
             Sort.Ascending -> {
@@ -175,16 +202,42 @@ class CharactersListActivity: BaseActivity(), CharactersListView, OnBottomReache
         binding.ivBorrarSortDate.visibility = if (show) View.VISIBLE else View.GONE
     }
 
+    /**
+     * Elimina la ordenación por nombre
+     */
     override fun resetSortName() {
+        //Quitamos la fecha que indica la ordenación
         binding.tvSortName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0,0,0)
+        //Y deseleccionamos el textView, para que vuelva a su color original
         binding.tvSortName.isSelected = false
     }
 
+    /**
+     * Elimina la ordenación por fecha
+     */
     override fun resetSortDate() {
         binding.tvSortDate.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0,0,0)
         binding.tvSortDate.isSelected = false
     }
 
+    /**
+     * Llama al adapter para que ordene la lista por nombre
+     */
+    override fun sortByName(sortName: Sort) {
+        adapter?.sortByName(sortName)
+    }
+
+    /**
+     * Ordena la lista por fecha
+     */
+    override fun sortByDate(sortName: Sort) {
+        adapter?.sortByDate(sortName)
+    }
+
+    /**
+     * Muestra el listado de personajes que tenemos. Si está vacío, muestra un emptyView para
+     * que la pantalla no sea muy sosa.
+     */
     override fun showCharacters(characters: List<Character>) {
         if (characters.isNotEmpty()) {
             adapter = CharactersAdapter(this, characters, presenter, this)
@@ -197,19 +250,25 @@ class CharactersListActivity: BaseActivity(), CharactersListView, OnBottomReache
         }
     }
 
+    /**
+     * Añade los personajes indicados a la lista que ya mostraba el adapter
+     */
     override fun addCharacters(characters: List<Character>) {
         adapter?.addCharacters(characters)
     }
 
+    /**
+     * Al llegar al final de la lista, llamamos al presenter para que descargue más personajes
+     */
     override fun onBottomReached() {
         presenter.getMoreCharacters()
     }
 
+    /**
+     * Mostramos el copyright de Marvel. Si no tenemos nada que mostrar, mostramos el que pone
+     * la documentación de la api
+     */
     override fun showCopyright(copyright: String?) {
         binding.tvCopyright.text = copyright ?: getString(R.string.copyright)
-    }
-
-    override fun onDataError() {
-        //NOTHING HERE
     }
 }

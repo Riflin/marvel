@@ -20,6 +20,7 @@
         android:scaleType="centerInside"
         android:layout_gravity="center"
         app:zoomage_zoomable="true"
+        app:zoomage_minScale="0.5"
         android:adjustViewBounds="true"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

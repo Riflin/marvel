@@ -92,11 +92,6 @@ class WebActivity: BaseActivity(), WebView {
         binding.webView.loadUrl(url)
     }
 
-    override fun onDataError() {
-        AppUtils.showDialogInformacion(supportFragmentManager, getString(R.string.error),
-            getString(R.string.error_obteniendo_datos)) { finish() }
-    }
-
     override fun onUrlInvalid() {
         AppUtils.showDialogInformacion(supportFragmentManager, getString(R.string.error),
             getString(R.string.url_invalid)) { finish() }

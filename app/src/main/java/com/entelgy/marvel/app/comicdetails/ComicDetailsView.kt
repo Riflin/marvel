@@ -96,4 +96,5 @@ interface ComicDetailsView: BaseView {
     fun showEvents(events: EventList?)
     fun showUrls(urls: ArrayList<Url>?)
     fun onErrorParsingData(message: String)
+    fun onComicNotSelectable()
 }

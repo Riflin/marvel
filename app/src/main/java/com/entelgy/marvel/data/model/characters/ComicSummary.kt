@@ -20,6 +20,16 @@ data class ComicSummary(
         parcel.writeString(name)
     }
 
+    fun getId(): Int? {
+        resourceURI?.let { uri ->
+            //El id del comic está en la última parte de la uri (ej: http://gateway.marvel.com/v1/public/comics/4100)
+            val urlSplit = uri.split("/")
+            return urlSplit[urlSplit.size - 1].toInt()
+        } ?: run {
+            return null
+        }
+    }
+
     override fun describeContents(): Int {
         return 0
     }

@@ -2,38 +2,45 @@ package com.entelgy.marvel.app.characterslist.presenter
 
 import androidx.fragment.app.DialogFragment
 import com.entelgy.marvel.R
-import com.entelgy.marvel.app.characterdetails.CharacterDetailsActivity
 import com.entelgy.marvel.app.callbacks.NameFilterCallback
 import com.entelgy.marvel.app.characterslist.CharactersListView
 import com.entelgy.marvel.app.characterslist.dialog.DialogFiltroNombre
 import com.entelgy.marvel.app.routing.Routing
 import com.entelgy.marvel.data.model.CharacterSummary
-import com.entelgy.marvel.data.model.utils.Sort
 import com.entelgy.marvel.data.model.characters.Character
 import com.entelgy.marvel.data.model.characters.CharacterDataContainer
+import com.entelgy.marvel.data.model.utils.Sort
 import com.entelgy.marvel.domain.usecases.network.characters.GetCharactersFromServer
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
-class CharactersListPresenterImpl() : CharactersListPresenter,
+open class CharactersListPresenterImpl<T: CharactersListView> : CharactersListPresenter<T>,
     NameFilterCallback, CoroutineScope {
 
-    override var view: CharactersListView? = null
+    /* La vista aquí está parametrizada para poder tener otra vista (la de los personajes por cómic) en
+     * el presenter que hereda de éste
+     */
+    override var view: T? = null
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
     private val job = Job()
 
-    private var sortName: Sort? = null
-    private var sortDate: Sort? = null
+    protected var sortName: Sort? = null
+    protected var sortDate: Sort? = null
 
-    private var filterName: String? = null
-    private var filterDate: Date? = null
+    protected var filterName: String? = null
+    protected var filterDate: Date? = null
 
 
-    private var lastDataFetched: CharacterDataContainer? = null
+    protected var lastDataFetched: CharacterDataContainer? = null
 
     override fun create() {
         sortName = null
@@ -59,6 +66,9 @@ class CharactersListPresenterImpl() : CharactersListPresenter,
         view = null
     }
 
+    /**
+     * Abre el diálogo para seleccionar el nombre
+     */
     override fun selectNameFilter() {
         if (view != null) {
             val dialog = DialogFiltroNombre.createNewInstance(filterName, this)
@@ -74,11 +84,13 @@ class CharactersListPresenterImpl() : CharactersListPresenter,
         //Quitamos cualquier espacio que hubiera podido quedarse
         filterName = name?.trim()
 
-        if (name != null) {
+        //Si no hemos escrito nada, reseteamos
+        if (name.isNullOrBlank()) {
+            resetNameFilter()
+        } else {
+            //Si no, lo mostramos
             view?.onFilterNameSelected(name)
             view?.showDeleteFilterName()
-        } else {
-            resetNameFilter()
         }
     }
 
@@ -88,6 +100,9 @@ class CharactersListPresenterImpl() : CharactersListPresenter,
         view?.showDeleteFilterName(show = false)
     }
 
+    /**
+     * Muestra un datePicker para seleccionar una fecha con la que filtrar los resultados
+     */
     override fun selectDateFilter() {
         if (view != null) {
             val calendar = Calendar.getInstance()
@@ -111,17 +126,24 @@ class CharactersListPresenterImpl() : CharactersListPresenter,
         view?.showDeleteFilterDate(show = false)
     }
 
+
+    /**
+     * En función de la ordenación que tuviéramos seleccionada, selecciona una u otra
+     */
     override fun sortByName() {
         sortName = when (sortName) {
             Sort.Ascending -> Sort.Descending
             Sort.Descending -> Sort.Ascending
             null -> Sort.Ascending
         }
+        //Sólo podemos  tener una ordenación a la vez, así que borramos la de fecha
         sortDate = null
+        //Lo mostramos en la vista, borrando la otra ordenación si la tuviéramos
         view?.onSortNameSelected(sortName!!)
         view?.showDeleteSortName()
         view?.resetSortDate()
         view?.showDeleteSortDate(show = false)
+        view?.sortByName(sortName!!)
     }
 
     override fun resetSortByName() {
@@ -130,17 +152,24 @@ class CharactersListPresenterImpl() : CharactersListPresenter,
         view?.showDeleteSortName(show = false)
     }
 
+    /**
+     * En función de la ordenación que tuviéramos seleccionada, selecciona una u otra
+     */
     override fun sortByDate() {
         sortDate = when (sortDate) {
             Sort.Ascending -> Sort.Descending
             Sort.Descending -> Sort.Ascending
+            //Por defecto, ascendente
             null -> Sort.Ascending
         }
+        //Sólo podemos  tener una ordenación a la vez, así que borramos la de nombre
         sortName = null
+        //Lo mostramos en la vista
         view?.onSortDateSelected(sortDate!!)
         view?.showDeleteSortDate()
         view?.resetSortName()
         view?.showDeleteSortName(show = false)
+        view?.sortByDate(sortDate!!)
     }
 
     override fun resetSortByDate() {
@@ -149,6 +178,9 @@ class CharactersListPresenterImpl() : CharactersListPresenter,
         view?.showDeleteSortDate(show = false)
     }
 
+    /**
+     * Se descarga los datos del servidor
+     */
     override fun getDataFromServer() {
         downloadCharacters()
     }
@@ -190,16 +222,31 @@ class CharactersListPresenterImpl() : CharactersListPresenter,
                 } else {
                     //Si ha fallado la llamada, mostramos el error
                     view?.showLoading(false)
-                    view?.showError(result.errorBody()?.string() ?: view?.context?.getString(R.string.error_downloading_characters) ?: "")
+                    val errorBody = result.errorBody()?.string()
+                    if (errorBody != null) {
+                        val json = JsonParser.parseString(errorBody)
+                        if (json is JsonObject) {
+                            val status = json.get("status").asString
+                            view?.showError(status)
+                        } else {
+                            view?.showError(view?.viewContext?.getString(R.string.error_downloading_characters) ?: "")
+                        }
+                    } else {
+                        view?.showError(view?.viewContext?.getString(R.string.error_downloading_characters) ?: "")
+                    }
                 }
             } catch (e: Exception) {
+                //Cualquier excepción que diera la llamada, pues mostramos el error
                 view?.showLoading(false)
-                view?.showError(e.message ?: view?.context?.getString(R.string.error_downloading_characters) ?: "")
+                view?.showError(e.message ?: view?.viewContext?.getString(R.string.error_downloading_characters) ?: "")
             }
         }
     }
 
-    private fun getSortParameter(): String {
+    /**
+     * Obtiene el parámetro a enviar al servidor en función de la ordenación escogida por el usuario
+     */
+    protected fun getSortParameter(): String {
         val sort = when (sortDate) {
             Sort.Ascending -> "date"
             Sort.Descending -> "-date"
@@ -217,7 +264,11 @@ class CharactersListPresenterImpl() : CharactersListPresenter,
     override fun getMoreCharacters() {
         //Sólo descargamos más personajes si tenemos algo más que descargar
         lastDataFetched?.let { lastDataFetched ->
-            if (lastDataFetched.total ?: 0 > lastDataFetched.count ?: 0) {
+            /* Tendremos algo más que descargar si el total de personajes es mayor al count (número de
+             * personajes obtenidos en la llamada) sumado al offset (número de personajes "saltados") de
+             * ese ultimo DataContainer
+             */
+            if (lastDataFetched.total ?: 0 > (lastDataFetched.count ?: 0).plus(lastDataFetched.offset ?: 0)) {
                 downloadCharacters(loadMoreCharacters = true)
             }
         } ?: run {
@@ -225,20 +276,33 @@ class CharactersListPresenterImpl() : CharactersListPresenter,
         }
     }
 
+    /**
+     * Mostramos los detalles del personaje
+     */
     override fun onCharacterSelected(character: Character) {
-        view?.context?.let { context ->
+        view?.viewContext?.let { context ->
             Routing.goToCharacterDetailsActivity(context, character)
         }
     }
 
+    /**
+     * En esta pantalla tenemos personajes (Character), por lo que este método del callback no tenemos
+     * que implementarlo
+     */
     override fun onCharacterSelected(character: CharacterSummary) {
         //NOTHING HERE
     }
 
+    /**
+     * Este método del callback tampoco es necesario implementarlo aquí
+     */
     override fun onMoreCharactersSelected() {
         //NOTHING HERE
     }
 
+    /**
+     * Listener para el filtro de la fecha
+     */
     private inner class FechaListener : DatePickerDialog.OnDateSetListener {
         override fun onDateSet(
             dialog: DatePickerDialog?,
@@ -246,6 +310,7 @@ class CharactersListPresenterImpl() : CharactersListPresenter,
             monthOfYear: Int,
             dayOfMonth: Int
         ) {
+            //Aunque luego sólo enviamos día, mes y año, ponemos la fecha a las 00:00:00 del día elegido
             val calendar = Calendar.getInstance()
             calendar[Calendar.YEAR] = year
             calendar[Calendar.MONTH] = monthOfYear
@@ -257,6 +322,7 @@ class CharactersListPresenterImpl() : CharactersListPresenter,
 
             filterDate = calendar.time
 
+            //Lo mostramos en la vista
             view?.onFilterDateSelected(calendar.time)
             view?.showDeleteFilterDate()
         }
