@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import com.entelgy.marvel.R
 import com.entelgy.marvel.data.model.Image
@@ -15,44 +16,45 @@ import java.lang.Exception
 /**
  * Pager adapter para mostrar las imágenes promocionales de los comics
  */
-class PhotosPagerAdapter(context: Context, private val images: List<Image>): PagerAdapter() {
+class PhotosPagerAdapter(context: Context, private val images: List<Image>):
+    RecyclerView.Adapter<PhotosPagerAdapter.PhotoHolder>() {
 
     private val inflater = LayoutInflater.from(context)
 
-    override fun getCount(): Int {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoHolder {
+        val view = inflater.inflate(R.layout.item_photo_detail, parent, false)
+        return PhotoHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: PhotoHolder, position: Int) {
+        val image = images[position]
+
+        holder.bind(image)
+    }
+
+    override fun getItemCount(): Int {
         return images.size
     }
 
-    override fun isViewFromObject(view: View, `object`: Any): Boolean {
-        return view == `object`
-    }
+    inner class PhotoHolder(view: View): RecyclerView.ViewHolder(view) {
 
-    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-        container.removeView(`object` as View)
-    }
+        private val binding = ItemPhotoDetailBinding.bind(view)
 
-    override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        //Inflamos la vista donde mostramos la imagen sin más
-        val binding = ItemPhotoDetailBinding.inflate(inflater, container, false)
+        fun bind(image: Image) {
+            //Mostramos la imagen
+            binding.progressBar.visibility = View.VISIBLE
+            Picasso.get().load(image.getRealPath()).into(binding.ivPhoto, object: Callback {
+                override fun onSuccess() {
+                    binding.progressBar.visibility = View.GONE
+                }
 
-        val image = images[position]
+                override fun onError(e: Exception?) {
+                    binding.progressBar.visibility = View.GONE
+                    binding.ivPhoto.setImageResource(R.drawable.ic_broken_image)
+                }
+            })
 
-        //Mostramos la imagen
-        binding.progressBar.visibility = View.VISIBLE
-        Picasso.get().load(image.getRealPath()).into(binding.ivPhoto, object: Callback {
-            override fun onSuccess() {
-                binding.progressBar.visibility = View.GONE
-            }
+        }
 
-            override fun onError(e: Exception?) {
-                binding.progressBar.visibility = View.GONE
-                binding.ivPhoto.setImageResource(R.drawable.ic_broken_image)
-            }
-        })
-
-        //Añadimos la vista al container para que se muestre bien
-        container.addView(binding.root)
-
-        return binding.root
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import androidx.viewpager2.widget.ViewPager2
 import com.entelgy.marvel.R
 import com.entelgy.marvel.app.photolist.adapter.PhotosPagerAdapter
 import com.entelgy.marvel.app.photolist.presenter.PhotoListPresenter
@@ -68,19 +69,11 @@ class PhotoListActivity: BaseActivity(), PhotoListView {
 
     override fun attachListenersToTheViews() {
         //Al cambiar de imagen iremos actualizando el número de la parte inferior
-        binding.viewPager.addOnPageChangeListener(object : OnPageChangeListener {
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-            }
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
 
             override fun onPageSelected(position: Int) {
                 setFotoIndex(position+1)
             }
-
-            override fun onPageScrollStateChanged(state: Int) {}
         })
     }
 
