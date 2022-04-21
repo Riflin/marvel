@@ -86,8 +86,8 @@ class ComicDetailsActivity: BaseActivity(), ComicDetailsView {
      * Inicializamos el presenter
      */
     override fun init() {
-        presenter = PresenterFactory.getComicDetailPresenter()
-        presenter.view = this
+        presenter = PresenterFactory.getComicDetailPresenter(this)
+//        presenter.view = this
         presenter.create()
     }
 

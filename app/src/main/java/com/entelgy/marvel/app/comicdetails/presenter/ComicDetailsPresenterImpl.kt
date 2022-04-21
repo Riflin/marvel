@@ -24,14 +24,14 @@ import kotlin.coroutines.CoroutineContext
 
 /**
  * Presenter para mostrar los detalles de un comic
+ *
+ * Como este lo instanciamos siempre, le pasamos la vista como parámetro en el constructor
  */
-class ComicDetailsPresenterImpl : ComicDetailsPresenter, CoroutineScope {
+class ComicDetailsPresenterImpl(override var view: ComicDetailsView?) : ComicDetailsPresenter, CoroutineScope {
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
     private val job = Job()
-
-    override var view: ComicDetailsView? = null
 
     private var comic: Comic? = null
 

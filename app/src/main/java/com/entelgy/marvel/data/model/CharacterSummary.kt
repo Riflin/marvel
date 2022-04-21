@@ -3,6 +3,7 @@ package com.entelgy.marvel.data.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import java.lang.Exception
 
 data class CharacterSummary(
     @SerializedName("resourceURI")
@@ -22,7 +23,11 @@ data class CharacterSummary(
     fun getId(): Int? {
         resourceURI?.let { uri ->
             val urlSplit = uri.split("/")
-            return urlSplit[urlSplit.size-1].toInt()
+            try {
+                return urlSplit[urlSplit.size - 1].toInt()
+            } catch (_: Exception) {
+                return null
+            }
         } ?: run {
             return null
         }

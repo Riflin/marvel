@@ -7,6 +7,7 @@ import com.entelgy.marvel.app.charactersbycomic.presenter.CharactersByComicPrese
 import com.entelgy.marvel.app.characterslist.CharactersListView
 import com.entelgy.marvel.app.characterslist.presenter.CharactersListPresenter
 import com.entelgy.marvel.app.characterslist.presenter.CharactersListPresenterImpl
+import com.entelgy.marvel.app.comicdetails.ComicDetailsView
 import com.entelgy.marvel.app.comicdetails.dialog.presenter.ComicVariantsPresenter
 import com.entelgy.marvel.app.comicdetails.dialog.presenter.ComicVariantsPresenterImpl
 import com.entelgy.marvel.app.comicdetails.presenter.ComicDetailsPresenter
@@ -77,9 +78,9 @@ object PresenterFactory {
      * la vista a null en el onDestroy() hacía que no funcionara bien al volver hacia atrás
      * de un cómic al que habíamos accedido desde esa misma actividad
      */
-    fun getComicDetailPresenter(): ComicDetailsPresenter {
+    fun getComicDetailPresenter(view: ComicDetailsView): ComicDetailsPresenter {
 //        return if (comicDetailsPresenter == null) {
-            comicDetailsPresenter = ComicDetailsPresenterImpl()
+            comicDetailsPresenter = ComicDetailsPresenterImpl(view)
             return comicDetailsPresenter!!
 //        } else {
 //            comicDetailsPresenter!!

@@ -27,7 +27,11 @@ data class ComicSummary(
         resourceURI?.let { uri ->
             //El id del comic está en la última parte de la uri (ej: http://gateway.marvel.com/v1/public/comics/4100)
             val urlSplit = uri.split("/")
-            return urlSplit[urlSplit.size - 1].toInt()
+            try {
+                return urlSplit[urlSplit.size - 1].toInt()
+            } catch (_: Exception) {
+                return null
+            }
         } ?: run {
             return null
         }
