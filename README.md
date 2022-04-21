@@ -1,4 +1,4 @@
-# Listado d personajes Marvel
+# Listado de personajes Marvel
 _Creación de una aplicación de muestra para Entelgy usando el api de Marvel_
 
 La aplicación se ha creado usando el patrón Modelo Vista Presentador. Está dividida en tres grandes paquetes: <b>app</b>, con todas las pantallas/diálogos y los presenters, divididos por paquete por pantalla, <b>data</b>, donde están los modelos (divididos a su vez entre personajes, cómics y clases útiles), servicios y providers para acceder a los datos, y <b>domain</b>, con los casos de uso para obtener los datos necesarios.
